@@ -695,7 +695,6 @@ decluttering_templates:
               background-blend-mode: saturation;
             {% endif %}
           }
-
   entity_count_card:
     default:
       - entity: light.all_lights
@@ -1935,131 +1934,43 @@ views:
                 chips:
                   - type: conditional
                     conditions:
-                      - condition: numeric_state
-                        entity: sensor.average_backyard_soil_humidity
-                        below: 40
-                    chip:
-                      type: template
-                      entity: sensor.average_backyard_soil_humidity
-                      icon: mdi:water-percent
-                      content: >-
-                        {{ states('sensor.average_backyard_soil_humidity') }}%
-                        - 
-
-                        {% set moisture =
-                        states('sensor.average_backyard_soil_humidity')
-                                        | float(0) %}
-
-                                        {% if moisture < 15 %}
-                                          very dry
-                                        {% elif moisture < 25 %}
-                                          dry
-                                        {% elif moisture < 45 %}
-                                          moist
-                                        {% else %}
-                                          wet
-                                        {% endif %}
-                      icon_color: >-
-                        {% set moisture =
-                        states('sensor.average_backyard_soil_humidity')
-                                        | float(0) %} {% if moisture < 15 %}
-                                          #A9A9A9
-                                        {% elif moisture < 25 %}
-                                          #ffd34f
-                                        {% elif moisture < 45 %}
-                                          #9fe7e8
-                                        {% else %}
-                                          #36a9e2
-                                        {% endif %}
-                      tap_action:
-                        action: more-info
-                  - type: conditional
-                    conditions:
-                      - condition: state
-                        entity: sensor.house_maintenance_chip_card
-                        state: 'true'
+                      - condition: or
+                        conditions:
+                          - condition: state
+                            entity: binary_sensor.rubbish_collection
+                            state: 'on'
+                          - condition: state
+                            entity: binary_sensor.recycling_collection
+                            state: 'on'
                     chip:
                       type: template
                       entity: sensor.house_maintenance_chip_card
-                      icon: |
-                        {% if is_state('input_boolean.rubbish', 'on') %}
+                      icon: >
+                        {% if is_state('binary_sensor.rubbish_collection', 'on')
+                        %}
                           mdi:trash-can
-                        {% elif is_state('input_boolean.recycle', 'on') %}
+                        {% elif is_state('binary_sensor.recycling_collection',
+                        'on') %}
                           mdi:recycle
                         {% else %} {% endif %}
-                      icon_color: |
-                        {% if is_state('input_boolean.rubbish', 'on') %}
+                      icon_color: >
+                        {% if is_state('binary_sensor.rubbish_collection', 'on')
+                        %}
                           #C41E3A
-                        {% elif is_state('input_boolean.recycle', 'on') %}
+                        {% elif is_state('binary_sensor.recycling_collection',
+                        'on') %}
                           #50C878
                         {% else %} {% endif %}
-                      content: |
-                        {% if is_state('input_boolean.rubbish', 'on') %}
+                      content: >
+                        {% if is_state('binary_sensor.rubbish_collection', 'on')
+                        %}
                           Rubbish Day
-                        {% elif is_state('input_boolean.recycle', 'on') %}
+                        {% elif is_state('binary_sensor.recycling_collection',
+                        'on') %}
                           Recycle Day
                         {% else %} {% endif %}      
                       tap_action:
                         action: more-info
-                  - type: conditional
-                    conditions:
-                      - condition: state
-                        entity: switch.all_water_taps
-                        state: 'on'
-                    chip:
-                      type: template
-                      entity: switch.all_water_taps
-                      content: |
-                        {{ expand('switch.all_water_taps')
-                            | selectattr('state', 'eq', 'on') 
-                            | map(attribute='name') 
-                            | join(', ') }}
-                      icon: |
-                        {% set open_tap = expand('switch.all_water_taps')
-                            | selectattr('state', 'eq', 'on')
-                            | list | count %}
-                        {{ 'm3of:sprinkler' if open_tap > 0 else '' }}
-                      icon_color: blue
-                      tap_action:
-                        action: navigate
-                        navigation_path: /mobile-dashboard/irrigation
-                  - type: conditional
-                    conditions:
-                      - condition: state
-                        entity: sensor.laundry_machine_state
-                        state: Delay Run
-                    chip:
-                      type: entity
-                      entity: sensor.laundry_delay_time_remaining
-                      icon_color: blue
-                      icon: m3of:timer-arrow-down
-                      tap_action:
-                        action: more-info
-                  - type: conditional
-                    conditions:
-                      - condition: state
-                        entity: sensor.laundry_machine_state
-                        state: Run
-                    chip:
-                      type: entity
-                      entity: sensor.laundry_time_remaining
-                      icon: m3of:laundry
-                      icon_color: blue
-                      tap_action:
-                        action: more-info
-                  - type: conditional
-                    conditions:
-                      - condition: numeric_state
-                        entity: sensor.dryer_switch_lr_power
-                        above: 10
-                    chip:
-                      type: template
-                      entity: sensor.dryer_switch_lr_power
-                      tap_action:
-                        action: more-info
-                      icon: mdi:tumble-dryer
-                      icon_color: '#880808'
-                      content: Dryer Running
                   - type: conditional
                     conditions:
                       - condition: or
@@ -2090,13 +2001,10 @@ views:
                       - condition: or
                         conditions:
                           - condition: state
-                            entity: input_boolean.rubbish
+                            entity: binary_sensor.rubbish_collection
                             state: 'on'
                           - condition: state
-                            entity: input_boolean.recycle
-                            state: 'on'
-                          - condition: state
-                            entity: switch.driveway_water_tap
+                            entity: binary_sensor.recycling_collection
                             state: 'on'
                     card:
                       type: vertical-stack
@@ -2108,44 +2016,12 @@ views:
                             - navigation_path: /mobile-dashboard/camera
                         - type: custom:webrtc-camera
                           streams:
-                            - entity: camera.right_driveway_camera_fluent
-                              mode: webrtc
+                            - entity: camera.driveway_camera_medium_resolution_channel
                               muted: true
-                        - type: custom:mushroom-chips-card
-                          alignment: start
-                          chips:
-                            - type: template
-                              entity: switch.light_switch_drw
-                              icon: m3of:lightbulb
-                              tap_action:
-                                action: toggle
-                              content: Driveway Light
-                              card_mod:
-                                style:
-                                  .: |
-                                    ha-card {
-                                      --text-color: {{ 'var(--primary-background-color)' if is_state('switch.light_switch_drw', 'on') else 'none' }};
-                                      --color: {{ 'var(--primary-background-color)'  if is_state('switch.light_switch_drw', 'on') else 'none' }};
-                                      --chip-background: {{ 'var(--md-sys-color-primary)' if is_state('switch.light_switch_drw', 'on') else 'color-mix(in srgb, var(--md-sys-color-surface-variant) 40%, transparent)' }};
-                                    }
-                            - type: template
-                              entity: switch.porch_light_drw
-                              icon: m3of:lightbulb
-                              tap_action:
-                                action: toggle
-                              content: Porch Light
-                              card_mod:
-                                style:
-                                  .: |
-                                    ha-card {
-                                      --text-color: {{ 'var(--primary-background-color)' if is_state('switch.porch_light_drw', 'on') else 'none' }};
-                                      --color: {{ 'var(--primary-background-color)'  if is_state('switch.porch_light_drw', 'on') else 'none' }};
-                                      --chip-background: {{ 'var(--md-sys-color-primary)' if is_state('switch.porch_light_drw', 'on') else 'color-mix(in srgb, var(--md-sys-color-surface-variant) 40%, transparent)' }};
-                                    }
                   - type: conditional
                     conditions:
                       - condition: state
-                        entity: binary_sensor.doors_grg
+                        entity: binary_sensor.doorbell_person_detected
                         state: 'on'
                     card:
                       type: vertical-stack
@@ -2153,210 +2029,13 @@ views:
                         - type: custom:decluttering-card
                           template: mushroom_title_nav_card
                           variables:
-                            - title: Garage
+                            - title: Doorbell
                             - navigation_path: /mobile-dashboard/camera
                         - type: custom:webrtc-camera
                           streams:
-                            - entity: camera.garage_camera_fluent
-                              mode: webrtc
+                            - entity: camera.doorbell_medium_resolution_channel
                               muted: true
-                        - type: custom:mushroom-chips-card
-                          alignment: start
-                          chips:
-                            - type: template
-                              entity: switch.light_switch_drw
-                              icon: m3of:lightbulb
-                              tap_action:
-                                action: toggle
-                              content: Driveway Light
-                              card_mod:
-                                style:
-                                  .: |
-                                    ha-card {
-                                      --text-color: {{ 'var(--primary-background-color)' if is_state('switch.light_switch_drw', 'on') else 'none' }};
-                                      --color: {{ 'var(--primary-background-color)'  if is_state('switch.light_switch_drw', 'on') else 'none' }};
-                                      --chip-background: {{ 'var(--md-sys-color-primary)' if is_state('switch.light_switch_drw', 'on') else 'color-mix(in srgb, var(--md-sys-color-surface-variant) 40%, transparent)' }};
-                                    }
-                            - type: template
-                              entity: switch.porch_light_drw
-                              icon: m3of:lightbulb
-                              tap_action:
-                                action: toggle
-                              content: Porch Light
-                              card_mod:
-                                style:
-                                  .: |
-                                    ha-card {
-                                      --text-color: {{ 'var(--primary-background-color)' if is_state('switch.porch_light_drw', 'on') else 'none' }};
-                                      --color: {{ 'var(--primary-background-color)'  if is_state('switch.porch_light_drw', 'on') else 'none' }};
-                                      --chip-background: {{ 'var(--md-sys-color-primary)' if is_state('switch.porch_light_drw', 'on') else 'color-mix(in srgb, var(--md-sys-color-surface-variant) 40%, transparent)' }};
-                                    }
                 columns: 1
-              - type: conditional
-                conditions:
-                  - condition: or
-                    conditions:
-                      - condition: state
-                        entity: input_boolean.wash_cuddly
-                        state: 'on'
-                      - condition: state
-                        entity: input_boolean.wash_duvet
-                        state: 'on'
-                card:
-                  type: custom:decluttering-card
-                  template: mushroom_title_card
-                  variables:
-                    - title: Chores
-              - type: grid
-                columns: 2
-                square: false
-                cards:
-                  - type: conditional
-                    conditions:
-                      - condition: state
-                        entity: timer.wash_cuddly
-                        state: idle
-                    card:
-                      type: custom:timer-bar-card
-                      entity: timer.wash_cuddly
-                      invert: true
-                      bar_direction: ltr
-                      bar_width: 60%
-                      mushroom:
-                        layout: vertical
-                        color: '#f385bc'
-                  - type: conditional
-                    conditions:
-                      - condition: state
-                        entity: timer.wash_duvet
-                        state: idle
-                    card:
-                      type: custom:timer-bar-card
-                      entity: timer.wash_duvet
-                      invert: true
-                      bar_direction: ltr
-                      bar_width: 60%
-                      mushroom:
-                        layout: vertical
-                        color: '#AFE1AF'
-              - type: conditional
-                conditions:
-                  - condition: or
-                    conditions:
-                      - condition: state
-                        entity: binary_sensor.show_wash_cuddly_timer
-                        state: 'on'
-                      - condition: state
-                        entity: switch.towel_switches
-                        state: 'on'
-                      - condition: state
-                        entity: timer.exhaust_fans
-                        state: active
-                      - condition: state
-                        entity: timer.rice_cooker
-                        state: active
-                      - condition: state
-                        entity: timer.blender
-                        state: active
-                      - condition: state
-                        entity: timer.sprinkler
-                        state: active
-                      - condition: state
-                        entity: binary_sensor.timer_wash_duvet_12h
-                        state: 'on'
-                card:
-                  type: custom:decluttering-card
-                  template: mushroom_title_card
-                  variables:
-                    - title: Timer
-              - type: grid
-                columns: 2
-                square: false
-                cards:
-                  - type: conditional
-                    conditions:
-                      - condition: state
-                        entity: binary_sensor.show_wash_cuddly_timer
-                        state: 'on'
-                    card:
-                      type: custom:timer-bar-card
-                      entity: timer.wash_cuddly
-                      invert: true
-                      bar_direction: ltr
-                      bar_width: 60%
-                      mushroom:
-                        layout: vertical
-                        color: '#f385bc'
-                  - type: conditional
-                    conditions:
-                      - condition: state
-                        entity: binary_sensor.show_wash_duvet_timer
-                        state: 'on'
-                    card:
-                      type: custom:timer-bar-card
-                      entity: timer.wash_duvet
-                      invert: true
-                      bar_direction: ltr
-                      bar_width: 60%
-                      mushroom:
-                        layout: vertical
-                        color: '#AFE1AF'
-                  - type: conditional
-                    conditions:
-                      - condition: state
-                        entity: timer.heated_towel_rails
-                        state: active
-                    card:
-                      type: custom:timer-bar-card
-                      entity: timer.heated_towel_rails
-                      invert: true
-                      bar_direction: ltr
-                      bar_width: 60%
-                      mushroom:
-                        layout: vertical
-                        color: orange
-                  - type: conditional
-                    conditions:
-                      - condition: state
-                        entity: timer.exhaust_fans
-                        state: active
-                    card:
-                      type: custom:timer-bar-card
-                      entity: timer.exhaust_fans
-                      invert: true
-                      bar_direction: ltr
-                      bar_width: 60%
-                      mushroom:
-                        layout: vertical
-                        color: '#b5e0f7'
-                  - type: conditional
-                    conditions:
-                      - condition: state
-                        entity: timer.rice_cooker
-                        state: active
-                    card:
-                      type: custom:timer-bar-card
-                      entity: timer.rice_cooker
-                      invert: true
-                      bar_direction: ltr
-                      bar_width: 60%
-                      mushroom:
-                        layout: vertical
-                        color: '#D70040'
-                  - type: conditional
-                    conditions:
-                      - condition: state
-                        entity: timer.blender
-                        state: active
-                    card:
-                      type: custom:timer-bar-card
-                      entity: timer.blender
-                      invert: true
-                      bar_direction: ltr
-                      bar_width: 60%
-                      mushroom:
-                        layout: vertical
-                        color: '#A020F0'
               - type: custom:mushroom-chips-card
                 chips:
                   - type: template
@@ -2935,21 +2614,21 @@ views:
                                 map(attribute='wind_bearing') | list | sum /
                                 forecasts | length) %}{% set direction =
                                 ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'][(avg_bearing
-                                / 22.5) | round(0) % 16] %}{% if peak < 2 %}{%
+                                / 22.5) | round(0) % 16] %}{% if peak < 4 %}{%
                                 set category = 'Calm' %}{% set emoji = '🌫️'
-                                %}{% elif peak < 6 %}{% set category = 'Light
+                                %}{% elif peak < 7 %}{% set category = 'Light
                                 breeze' %}{% set emoji = '🍃' %}{% elif peak <
-                                12 %}{% set category = 'Gentle breeze' %}{% set
-                                emoji = '🌿' %}{% elif peak < 20 %}{% set
+                                11 %}{% set category = 'Gentle breeze' %}{% set
+                                emoji = '🌿' %}{% elif peak < 17 %}{% set
                                 category = 'Moderate breeze' %}{% set emoji =
-                                '🌬️' %}{% elif peak < 29 %}{% set category =
+                                '🌬️' %}{% elif peak < 22 %}{% set category =
                                 'Fresh breeze' %}{% set emoji = '💨' %}{% elif
-                                peak < 39 %}{% set category = 'Strong breeze'
-                                %}{% set emoji = '💨' %}{% elif peak < 50 %}{%
+                                peak < 28 %}{% set category = 'Strong breeze'
+                                %}{% set emoji = '💨' %}{% elif peak < 34 %}{%
                                 set category = 'Near gale' %}{% set emoji =
-                                '🌪️' %}{% elif peak < 62 %}{% set category =
+                                '🌪️' %}{% elif peak < 41 %}{% set category =
                                 'Gale' %}{% set emoji = '🌪️' %}{% elif peak <
-                                75 %}{% set category = 'Strong gale' %}{% set
+                                48 %}{% set category = 'Strong gale' %}{% set
                                 emoji = '🌪️' %}{% else %}{% set category =
                                 'Storm' %}{% set emoji = '🌀' %}{% endif %}{{
                                 emoji }} Winds: {{ peak | round(1) }} {{
@@ -2984,7 +2663,7 @@ views:
                                 yaxis:
                                   - id: speed
                                     title:
-                                      text: Wind Speed (km/h)
+                                      text: Wind Speed (kn)
                                     opposite: false
                                   - id: direction
                                     title:
@@ -3114,12 +2793,12 @@ views:
                             - title: Lunar Cycle & Visibility
                             - subtitle: >-
                                 {% set rise =
-                                states('sensor.your_town_moon_rise') %}{% set
-                                set_ = states('sensor.your_town_moon_set')
+                                states('sensor.southampton_moon_rise') %}{% set
+                                set_ = states('sensor.southampton_moon_set')
                                 %}{% set next_full =
-                                states('sensor.your_town_next_full_moon')
-                                %}{% set phase =
-                                states('sensor.your_town_moon_phase') or
+                                states('sensor.southampton_next_full_moon') %}{%
+                                set phase =
+                                states('sensor.southampton_moon_phase') or
                                 'Unknown' %}{% set phase_emoji = {'New
                                 Moon':'🌑','Waxing Crescent':'🌒','First
                                 Quarter':'🌓','Waxing Gibbous':'🌔','Full
@@ -3169,8 +2848,8 @@ views:
                             label_font_style: none
                             label_font_color: ''
                             hide_label: false
-                          latitude:
-                          longitude:
+                          latitude: 50.722521
+                          longitude: -1.942697
                           location:
                             city: Poole
                             country: UK
@@ -3340,7 +3019,6 @@ views:
                 popup:
                   - icon: m3of:tools-wrench
                     url: /config/dashboard
-
                   - icon: m3of:sprinkler
                     url: /mobile-dashboard/irrigation
                   - icon: m3of:server-person
@@ -8655,7 +8333,6 @@ views:
       size: cover
       repeat: repeat
       attachment: fixed
-
   - type: sections
     max_columns: 4
     title: Irrigation
