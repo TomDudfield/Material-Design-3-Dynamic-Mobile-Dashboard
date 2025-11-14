@@ -742,45 +742,6 @@ views:
             chips:
               - type: conditional
                 conditions:
-                  - condition: numeric_state
-                    entity: sensor.geonet_nz_quakes_37_6421739_175_527482
-                    above: 0
-                chip:
-                  type: template
-                  entity: sensor.geonet_nz_quakes_37_6421739_175_527482
-                  tap_action:
-                    action: navigate
-                    navigation_path: '#weather-panel'
-                  icon: m3of:globe-location-pin
-                  icon_color: >
-                    {% set mag = state_attr('sensor.latest_nearby_quake',
-                    'magnitude') | float(0) %} {% if mag >= 6.0 %} #D32F2F {%
-                    elif mag >= 5.0 %} #F4511E {% elif mag >= 4.0 %} #FB8C00 {%
-                    elif mag >= 3.0 %} #F9A825 {% elif mag >= 2.0 %} #FBC02D {%
-                    else %} #388E3C {% endif %}
-              - type: conditional
-                conditions:
-                  - condition: numeric_state
-                    entity: sensor.volcano_rotorua
-                    above: 0
-                chip:
-                  type: template
-                  entity: sensor.volcano_rotorua
-                  tap_action:
-                    action: navigate
-                    navigation_path: '#volcano-warning'
-                  icon: m3of:mountain-steam
-                  icon_color: |
-                    {% set level = states('sensor.volcano_rotorua') | int %}
-                    {% if level == 5 %} red
-                    {% elif level == 4 %} deep-orange
-                    {% elif level == 3 %} orange
-                    {% elif level == 2 %} amber
-                    {% elif level == 1 %} yellow
-                    {% else %} green
-                    {% endif %}
-              - type: conditional
-                conditions:
                   - condition: state
                     entity: sensor.home_metservice_weather_warnings
                     state_not: unknown
@@ -1087,8 +1048,8 @@ views:
                               secondary: |
                                 Indoor
                               icon: >
-                                {% set hvac_mode = states('climate.heat_pump')
-                                %}
+                                {% set hvac_mode =
+                                states('climate.balmoral_road') %}
 
                                 {% if hvac_mode == 'heat' %} mdi:fire
 
@@ -1100,8 +1061,8 @@ views:
 
                                 {% endif %}
                               icon_color: >
-                                {% set hvac_mode = states('climate.heat_pump')
-                                %}
+                                {% set hvac_mode =
+                                states('climate.balmoral_road') %}
 
                                 {% if hvac_mode == 'heat' %} #FF6F22
 
@@ -1155,9 +1116,9 @@ views:
                           entities:
                             - sensor.house_average_temperature
                             - sensor.outdoor_temperature
-                            - climate.heat_pump
+                            - climate.balmoral_road
                           variables:
-                            - states['climate.heat_pump'].state
+                            - states['climate.balmoral_road'].state
                             - states['sensor.house_average_temperature'].state
                             - states['sensor.outdoor_temperature'].state
                           card:
@@ -1196,13 +1157,13 @@ views:
                         - type: horizontal-stack
                           cards:
                             - type: custom:mushroom-climate-card
-                              entity: climate.heat_pump
+                              entity: climate.balmoral_road
                               primary_info: none
                               secondary_info: none
                               icon_type: none
                               show_temperature_control: true
                             - type: custom:mushroom-climate-card
-                              entity: climate.heat_pump
+                              entity: climate.balmoral_road
                               primary_info: none
                               secondary_info: none
                               icon_type: none
@@ -1545,10 +1506,12 @@ views:
                             --simple-swipe-card-pagination-dot-size: 7px;
                           }
                     - entities:
-                        - entity: calendar.
-                          accent_color: '#ff6a6a'
-                        - entity: calendar.
-                          accent_color: '#71c8fe'
+                        - entity: calendar.recycling
+                          accent_color: blue
+                        - entity: calendar.rubbish
+                          accent_color: black
+                        - entity: calendar.united_kingdom_eng
+                          accent_color: red
                       days_to_show: 10
                       compact_events_to_show: 10
                       background_color: transparent
@@ -1845,69 +1808,6 @@ views:
                       show_empty: false
                       sort:
                         method: friendly_name
-                    - type: custom:decluttering-card
-                      template: entity_count_card
-                      variables:
-                        - entity: group.all_windows
-                        - title: Windows
-                        - icon: m3o:window-open
-                        - color: '#ffaa00'
-                    - type: custom:auto-entities
-                      card:
-                        square: false
-                        type: grid
-                        columns: 2
-                      card_param: cards
-                      filter:
-                        include:
-                          - group: group.all_windows
-                            state: 'on'
-                            options:
-                              type: custom:material-button-card
-                              use_default_icon: false
-                              use_default_toggle: true
-                              use_default_text: false
-                              se_default_text: true
-                              entity: this.entity_id
-                              height: 97
-                              control_type: generic
-                              icon: m3of:window-open
-                              text_on: Open
-                              text_off: Closed
-                        exclude: []
-                      show_empty: false
-                      sort:
-                        method: friendly_name
-                    - type: custom:decluttering-card
-                      template: entity_count_card
-                      variables:
-                        - entity: fan.all_fans
-                        - title: Fans
-                        - icon: mdi:fan
-                        - color: '#ADD8E6'
-                    - type: custom:auto-entities
-                      card:
-                        square: false
-                        type: grid
-                        columns: 2
-                      card_param: cards
-                      filter:
-                        include:
-                          - group: fan.all_fans
-                            state: 'on'
-                            options:
-                              type: custom:material-button-card
-                              use_default_icon: false
-                              use_default_toggle: true
-                              use_default_text: true
-                              entity: this.entity_id
-                              height: 97
-                              control_type: generic
-                              icon: mdi:fan
-                        exclude: []
-                      show_empty: false
-                      sort:
-                        method: friendly_name
       - type: grid
         cards:
           - type: vertical-stack
@@ -2005,6 +1905,9 @@ views:
                             state: 'on'
                           - condition: state
                             entity: binary_sensor.recycling_collection
+                            state: 'on'
+                          - condition: state
+                            entity: binary_sensor.driveway_camera_person_detected
                             state: 'on'
                     card:
                       type: vertical-stack
