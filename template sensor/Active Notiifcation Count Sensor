@@ -2,7 +2,7 @@
     - name: "Active Notification Count"
       state: >
         {% set count = 0 %}
-        {% if is_state('input_boolean.rubbish', 'on') or is_state('input_boolean.recycle', 'on') %}
+        {% if is_state('binary_sensor.recycling_collection', 'on') or is_state('binary_sensor.rubbish_collection', 'on') %}
           {% set count = count + 1 %}
         {% endif %}
         {% if is_state('binary_sensor.all_doors', 'on') %}
