@@ -1566,63 +1566,63 @@ views:
                             - type: custom:decluttering-card
                               template: temperature_entity
                               variables:
-                                - entity: sensor.outdoor_temperature
+                                - entity: sensor.temperature_forecast_next_hour
                                 - name: Outdoor
                                 - icon: mdi:weather-partly-cloudy
                             - type: custom:decluttering-card
                               template: temperature_entity
                               variables:
-                                - entity: sensor.living_room_temperature
-                                - name: Living
+                                - entity: sensor.lounge_temperature_and_humidity_sensor_temperature
+                                - name: Lounge
                                 - icon: m3of:chair
                             - type: custom:decluttering-card
                               template: temperature_entity
                               variables:
-                                - entity: sensor.master_bedroom_temperature
+                                - entity: sensor.kitchen_temperature_and_humidity_sensor_temperature
+                                - name: Kitchen
+                                - icon: m3of:bed
+                            - type: custom:decluttering-card
+                              template: temperature_entity
+                              variables:
+                                - entity: sensor.utility_temperature_and_humidity_sensor_temperature
+                                - name: Utility
+                                - icon: m3of:bed
+                            - type: custom:decluttering-card
+                              template: temperature_entity
+                              variables:
+                                - entity: sensor.master_bedroom_temperature_and_humidity_sensor_temperature
                                 - name: Master
                                 - icon: m3of:bed
                             - type: custom:decluttering-card
                               template: temperature_entity
                               variables:
-                                - entity: sensor.baby_room_temperature
-                                - name: Baby
+                                - entity: sensor.quinn_bedroom_temperature_and_humidity_sensor_temperature
+                                - name: Quinn
                                 - icon: m3of:stroller
                             - type: custom:decluttering-card
                               template: temperature_entity
                               variables:
-                                - entity: sensor.single_guest_room_temperature
-                                - name: Single
+                                - entity: sensor.main_bathroom_temperature_and_humidity_sensor_temperature
+                                - name: Bathroom
                                 - icon: m3of:person-3
                             - type: custom:decluttering-card
                               template: temperature_entity
                               variables:
-                                - entity: sensor.multiple_guest_room_temperature
-                                - name: Multiple
-                                - icon: m3of:groups-2
-                            - type: custom:decluttering-card
-                              template: temperature_entity
-                              variables:
-                                - entity: sensor.office_room_temperature
+                                - entity: sensor.office_temperature_and_humidity_sensor_temperature
                                 - name: Office
                                 - icon: m3of:computer
                             - type: custom:decluttering-card
                               template: temperature_entity
                               variables:
-                                - entity: sensor.guest_bathroom_temperature
+                                - entity: sensor.guest_bedroom_temperature_and_humidity_sensor_temperature
+                                - name: Guest
+                                - icon: m3of:groups-2
+                            - type: custom:decluttering-card
+                              template: temperature_entity
+                              variables:
+                                - entity: sensor.guest_bedroom_temperature_and_humidity_sensor_temperature
                                 - name: Guest Bath
                                 - icon: mdi:water
-                            - type: custom:decluttering-card
-                              template: temperature_entity
-                              variables:
-                                - entity: sensor.garage_temperature
-                                - name: Garage
-                                - icon: m3of:garage-home
-                            - type: custom:decluttering-card
-                              template: temperature_entity
-                              variables:
-                                - entity: sensor.attic_temperature
-                                - name: Attic
-                                - icon: m3of:roofing
                     - type: vertical-stack
                       cards:
                         - type: custom:decluttering-card
@@ -1634,63 +1634,63 @@ views:
                             - type: custom:decluttering-card
                               template: humidity_entity
                               variables:
-                                - entity: sensor.outdoor_humidity
+                                - entity: sensor.humidity_probability_forecast_next_hour
                                 - name: Outdoor
                                 - icon: mdi:weather-partly-cloudy
                             - type: custom:decluttering-card
                               template: humidity_entity
                               variables:
-                                - entity: sensor.living_area_humidity
-                                - name: Living
+                                - entity: sensor.lounge_temperature_and_humidity_sensor_humidity
+                                - name: Lounge
                                 - icon: m3of:chair
                             - type: custom:decluttering-card
                               template: humidity_entity
                               variables:
-                                - entity: sensor.master_bedroom_humidity
+                                - entity: sensor.kitchen_temperature_and_humidity_sensor_humidity
+                                - name: Kitchen
+                                - icon: m3of:bed
+                            - type: custom:decluttering-card
+                              template: humidity_entity
+                              variables:
+                                - entity: sensor.utility_temperature_and_humidity_sensor_humidity
+                                - name: Utility
+                                - icon: m3of:bed
+                            - type: custom:decluttering-card
+                              template: humidity_entity
+                              variables:
+                                - entity: sensor.master_bedroom_temperature_and_humidity_sensor_humidity
                                 - name: Master
                                 - icon: m3of:bed
                             - type: custom:decluttering-card
                               template: humidity_entity
                               variables:
-                                - entity: sensor.baby_room_humidity
-                                - name: Baby
+                                - entity: sensor.quinn_bedroom_temperature_and_humidity_sensor_humidity
+                                - name: Quinn
                                 - icon: m3of:stroller
                             - type: custom:decluttering-card
                               template: humidity_entity
                               variables:
-                                - entity: sensor.single_guest_room_humidity
-                                - name: Single
+                                - entity: sensor.main_bathroom_temperature_and_humidity_sensor_humidity
+                                - name: Bathroom
                                 - icon: m3of:person-3
                             - type: custom:decluttering-card
                               template: humidity_entity
                               variables:
-                                - entity: sensor.multiple_guest_room_humidity
-                                - name: Multiple
-                                - icon: m3of:groups-2
-                            - type: custom:decluttering-card
-                              template: humidity_entity
-                              variables:
-                                - entity: sensor.office_room_humidity
+                                - entity: sensor.office_temperature_and_humidity_sensor_humidity
                                 - name: Office
                                 - icon: m3of:computer
                             - type: custom:decluttering-card
                               template: humidity_entity
                               variables:
-                                - entity: sensor.guest_bathroom_humidity
+                                - entity: sensor.guest_bedroom_temperature_and_humidity_sensor_humidity
+                                - name: Guest
+                                - icon: m3of:groups-2
+                            - type: custom:decluttering-card
+                              template: humidity_entity
+                              variables:
+                                - entity: sensor.guest_bedroom_temperature_and_humidity_sensor_humidity
                                 - name: Guest Bath
                                 - icon: mdi:water
-                            - type: custom:decluttering-card
-                              template: humidity_entity
-                              variables:
-                                - entity: sensor.garage_humidity
-                                - name: Garage
-                                - icon: m3of:garage-home
-                            - type: custom:decluttering-card
-                              template: humidity_entity
-                              variables:
-                                - entity: sensor.attic_humidity
-                                - name: Attic
-                                - icon: m3of:roofing
               - title: Active
                 icon: m3of:play-circle
                 conditions:
@@ -2566,7 +2566,7 @@ views:
                                 yaxis:
                                   - id: speed
                                     title:
-                                      text: Wind Speed (kn)
+                                      text: Wind Speed (km/h)
                                     opposite: false
                                   - id: direction
                                     title:
