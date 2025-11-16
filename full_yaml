@@ -2517,21 +2517,21 @@ views:
                                 map(attribute='wind_bearing') | list | sum /
                                 forecasts | length) %}{% set direction =
                                 ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'][(avg_bearing
-                                / 22.5) | round(0) % 16] %}{% if peak < 4 %}{%
+                                / 22.5) | round(0) % 16] %}{% if peak < 2 %}{%
                                 set category = 'Calm' %}{% set emoji = '🌫️'
-                                %}{% elif peak < 7 %}{% set category = 'Light
+                                %}{% elif peak < 6 %}{% set category = 'Light
                                 breeze' %}{% set emoji = '🍃' %}{% elif peak <
-                                11 %}{% set category = 'Gentle breeze' %}{% set
-                                emoji = '🌿' %}{% elif peak < 17 %}{% set
+                                12 %}{% set category = 'Gentle breeze' %}{% set
+                                emoji = '🌿' %}{% elif peak < 20 %}{% set
                                 category = 'Moderate breeze' %}{% set emoji =
-                                '🌬️' %}{% elif peak < 22 %}{% set category =
+                                '🌬️' %}{% elif peak < 29 %}{% set category =
                                 'Fresh breeze' %}{% set emoji = '💨' %}{% elif
-                                peak < 28 %}{% set category = 'Strong breeze'
-                                %}{% set emoji = '💨' %}{% elif peak < 34 %}{%
+                                peak < 39 %}{% set category = 'Strong breeze'
+                                %}{% set emoji = '💨' %}{% elif peak < 50 %}{%
                                 set category = 'Near gale' %}{% set emoji =
-                                '🌪️' %}{% elif peak < 41 %}{% set category =
+                                '🌪️' %}{% elif peak < 62 %}{% set category =
                                 'Gale' %}{% set emoji = '🌪️' %}{% elif peak <
-                                48 %}{% set category = 'Strong gale' %}{% set
+                                75 %}{% set category = 'Strong gale' %}{% set
                                 emoji = '🌪️' %}{% else %}{% set category =
                                 'Storm' %}{% set emoji = '🌀' %}{% endif %}{{
                                 emoji }} Winds: {{ peak | round(1) }} {{
@@ -2696,12 +2696,12 @@ views:
                             - title: Lunar Cycle & Visibility
                             - subtitle: >-
                                 {% set rise =
-                                states('sensor.southampton_moon_rise') %}{% set
-                                set_ = states('sensor.southampton_moon_set')
+                                states('sensor.poole_moon_rise') %}{% set
+                                set_ = states('sensor.poole_moon_set')
                                 %}{% set next_full =
-                                states('sensor.southampton_next_full_moon') %}{%
+                                states('sensor.poole_next_full_moon') %}{%
                                 set phase =
-                                states('sensor.southampton_moon_phase') or
+                                states('sensor.poole_moon_phase') or
                                 'Unknown' %}{% set phase_emoji = {'New
                                 Moon':'🌑','Waxing Crescent':'🌒','First
                                 Quarter':'🌓','Waxing Gibbous':'🌔','Full
@@ -2751,8 +2751,8 @@ views:
                             label_font_style: none
                             label_font_color: ''
                             hide_label: false
-                          latitude: 50.722521
-                          longitude: -1.942697
+                          latitude: 50.719391
+                          longitude: -1.981140
                           location:
                             city: Poole
                             country: UK
