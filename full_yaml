@@ -1057,6 +1057,11 @@ views:
 
                                 {% elif hvac_mode == 'fan_only' %} mdi:fan
 
+                                {% elif hvac_mode == 'auto' %}
+                                mdi:thermostat-auto
+
+                                {% elif hvac_mode == 'off' %} mdi:power
+
                                 {% else %} m3of:thermometer
 
                                 {% endif %}
@@ -1069,6 +1074,10 @@ views:
                                 {% elif hvac_mode == 'cool' %} #2196F3
 
                                 {% elif hvac_mode == 'fan_only' %} #029688
+
+                                {% elif hvac_mode == 'auto' %} #029688
+
+                                {% elif hvac_mode == 'off' %} #2196F3
 
                                 {% else %}
                                   {% set temp = states('sensor.house_average_temperature') | float %}
@@ -1171,6 +1180,7 @@ views:
                                 - cool
                                 - heat
                                 - fan_only
+                                - auto
                                 - 'off'
                     - type: custom:simple-swipe-card
                       auto_hide_pagination: 0
