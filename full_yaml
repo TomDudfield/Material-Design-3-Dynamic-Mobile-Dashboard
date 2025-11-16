@@ -1512,6 +1512,12 @@ views:
                           accent_color: black
                         - entity: calendar.united_kingdom_eng
                           accent_color: red
+                        - entity: calendar.tom_dudfield_com
+                          accent_color: orange
+                        - entity: calendar.family
+                          accent_color: green
+                        - entity: calendar.michaela_dudfield_com
+                          accent_color: pink
                       days_to_show: 10
                       compact_events_to_show: 10
                       background_color: transparent
@@ -1572,55 +1578,64 @@ views:
                             - type: custom:decluttering-card
                               template: temperature_entity
                               variables:
-                                - entity: sensor.lounge_temperature_and_humidity_sensor_temperature
+                                - entity: >-
+                                    sensor.lounge_temperature_and_humidity_sensor_temperature
                                 - name: Lounge
                                 - icon: m3of:chair
                             - type: custom:decluttering-card
                               template: temperature_entity
                               variables:
-                                - entity: sensor.kitchen_temperature_and_humidity_sensor_temperature
+                                - entity: >-
+                                    sensor.kitchen_temperature_and_humidity_sensor_temperature
                                 - name: Kitchen
                                 - icon: m3of:bed
                             - type: custom:decluttering-card
                               template: temperature_entity
                               variables:
-                                - entity: sensor.utility_temperature_and_humidity_sensor_temperature
+                                - entity: >-
+                                    sensor.utility_temperature_and_humidity_sensor_temperature
                                 - name: Utility
                                 - icon: m3of:bed
                             - type: custom:decluttering-card
                               template: temperature_entity
                               variables:
-                                - entity: sensor.master_bedroom_temperature_and_humidity_sensor_temperature
+                                - entity: >-
+                                    sensor.master_bedroom_temperature_and_humidity_sensor_temperature
                                 - name: Master
                                 - icon: m3of:bed
                             - type: custom:decluttering-card
                               template: temperature_entity
                               variables:
-                                - entity: sensor.quinn_bedroom_temperature_and_humidity_sensor_temperature
+                                - entity: >-
+                                    sensor.quinn_bedroom_temperature_and_humidity_sensor_temperature
                                 - name: Quinn
                                 - icon: m3of:stroller
                             - type: custom:decluttering-card
                               template: temperature_entity
                               variables:
-                                - entity: sensor.main_bathroom_temperature_and_humidity_sensor_temperature
+                                - entity: >-
+                                    sensor.main_bathroom_temperature_and_humidity_sensor_temperature
                                 - name: Bathroom
                                 - icon: m3of:person-3
                             - type: custom:decluttering-card
                               template: temperature_entity
                               variables:
-                                - entity: sensor.office_temperature_and_humidity_sensor_temperature
+                                - entity: >-
+                                    sensor.office_temperature_and_humidity_sensor_temperature
                                 - name: Office
                                 - icon: m3of:computer
                             - type: custom:decluttering-card
                               template: temperature_entity
                               variables:
-                                - entity: sensor.guest_bedroom_temperature_and_humidity_sensor_temperature
+                                - entity: >-
+                                    sensor.guest_bedroom_temperature_and_humidity_sensor_temperature
                                 - name: Guest
                                 - icon: m3of:groups-2
                             - type: custom:decluttering-card
                               template: temperature_entity
                               variables:
-                                - entity: sensor.guest_bedroom_temperature_and_humidity_sensor_temperature
+                                - entity: >-
+                                    sensor.guest_bedroom_temperature_and_humidity_sensor_temperature
                                 - name: Guest Bath
                                 - icon: mdi:water
                     - type: vertical-stack
@@ -1634,61 +1649,71 @@ views:
                             - type: custom:decluttering-card
                               template: humidity_entity
                               variables:
-                                - entity: sensor.humidity_probability_forecast_next_hour
+                                - entity: >-
+                                    sensor.humidity_probability_forecast_next_hour
                                 - name: Outdoor
                                 - icon: mdi:weather-partly-cloudy
                             - type: custom:decluttering-card
                               template: humidity_entity
                               variables:
-                                - entity: sensor.lounge_temperature_and_humidity_sensor_humidity
+                                - entity: >-
+                                    sensor.lounge_temperature_and_humidity_sensor_humidity
                                 - name: Lounge
                                 - icon: m3of:chair
                             - type: custom:decluttering-card
                               template: humidity_entity
                               variables:
-                                - entity: sensor.kitchen_temperature_and_humidity_sensor_humidity
+                                - entity: >-
+                                    sensor.kitchen_temperature_and_humidity_sensor_humidity
                                 - name: Kitchen
                                 - icon: m3of:bed
                             - type: custom:decluttering-card
                               template: humidity_entity
                               variables:
-                                - entity: sensor.utility_temperature_and_humidity_sensor_humidity
+                                - entity: >-
+                                    sensor.utility_temperature_and_humidity_sensor_humidity
                                 - name: Utility
                                 - icon: m3of:bed
                             - type: custom:decluttering-card
                               template: humidity_entity
                               variables:
-                                - entity: sensor.master_bedroom_temperature_and_humidity_sensor_humidity
+                                - entity: >-
+                                    sensor.master_bedroom_temperature_and_humidity_sensor_humidity
                                 - name: Master
                                 - icon: m3of:bed
                             - type: custom:decluttering-card
                               template: humidity_entity
                               variables:
-                                - entity: sensor.quinn_bedroom_temperature_and_humidity_sensor_humidity
+                                - entity: >-
+                                    sensor.quinn_bedroom_temperature_and_humidity_sensor_humidity
                                 - name: Quinn
                                 - icon: m3of:stroller
                             - type: custom:decluttering-card
                               template: humidity_entity
                               variables:
-                                - entity: sensor.main_bathroom_temperature_and_humidity_sensor_humidity
+                                - entity: >-
+                                    sensor.main_bathroom_temperature_and_humidity_sensor_humidity
                                 - name: Bathroom
                                 - icon: m3of:person-3
                             - type: custom:decluttering-card
                               template: humidity_entity
                               variables:
-                                - entity: sensor.office_temperature_and_humidity_sensor_humidity
+                                - entity: >-
+                                    sensor.office_temperature_and_humidity_sensor_humidity
                                 - name: Office
                                 - icon: m3of:computer
                             - type: custom:decluttering-card
                               template: humidity_entity
                               variables:
-                                - entity: sensor.guest_bedroom_temperature_and_humidity_sensor_humidity
+                                - entity: >-
+                                    sensor.guest_bedroom_temperature_and_humidity_sensor_humidity
                                 - name: Guest
                                 - icon: m3of:groups-2
                             - type: custom:decluttering-card
                               template: humidity_entity
                               variables:
-                                - entity: sensor.guest_bedroom_temperature_and_humidity_sensor_humidity
+                                - entity: >-
+                                    sensor.guest_bedroom_temperature_and_humidity_sensor_humidity
                                 - name: Guest Bath
                                 - icon: mdi:water
               - title: Active
@@ -2695,13 +2720,11 @@ views:
                           variables:
                             - title: Lunar Cycle & Visibility
                             - subtitle: >-
-                                {% set rise =
-                                states('sensor.poole_moon_rise') %}{% set
-                                set_ = states('sensor.poole_moon_set')
+                                {% set rise = states('sensor.poole_moon_rise')
+                                %}{% set set_ = states('sensor.poole_moon_set')
                                 %}{% set next_full =
-                                states('sensor.poole_next_full_moon') %}{%
-                                set phase =
-                                states('sensor.poole_moon_phase') or
+                                states('sensor.poole_next_full_moon') %}{% set
+                                phase = states('sensor.poole_moon_phase') or
                                 'Unknown' %}{% set phase_emoji = {'New
                                 Moon':'🌑','Waxing Crescent':'🌒','First
                                 Quarter':'🌓','Waxing Gibbous':'🌔','Full
@@ -2752,7 +2775,7 @@ views:
                             label_font_color: ''
                             hide_label: false
                           latitude: 50.719391
-                          longitude: -1.981140
+                          longitude: -1.98114
                           location:
                             city: Poole
                             country: UK
