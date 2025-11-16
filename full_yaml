@@ -1182,67 +1182,6 @@ views:
                                 - fan_only
                                 - auto
                                 - 'off'
-                    - type: custom:simple-swipe-card
-                      auto_hide_pagination: 0
-                      cards:
-                        - type: custom:vertical-stack-in-card
-                          cards:
-                            - type: custom:mushroom-template-card
-                              primary: |-
-                                Driveway Security  -   {% set disabled = [
-                                      is_state('binary_sensor.driveway_camera_person_detected', 'off'),
-                                      is_state('binary_sensor.doorbell_person_detected', 'off')
-                                    ] | select('eq', true) | list | count %}
-                                    {% if disabled == 0 %}
-                                      All cameras active
-                                    {% elif disabled == 1 %}
-                                      1 camera disabled
-                                    {% else %}
-                                      {{ disabled }} cameras disabled
-                                    {% endif %}
-                              tap_action:
-                                action: none
-                              hold_action:
-                                action: none
-                              double_tap_action:
-                                action: none
-                              features_position: bottom
-                            - type: custom:mushroom-chips-card
-                              chips:
-                                - type: template
-                                  entity: >-
-                                    binary_sensor.driveway_camera_person_detected
-                                  icon: mdi:car
-                                  icon_color: |-
-                                    {% if is_state(entity, 'on') %} 
-                                    {% else %}
-                                     var(--primary-text-color)
-                                    {% endif %}
-                                - type: template
-                                  entity: binary_sensor.doorbell_person_detected
-                                  icon: mdi:doorbell-video
-                                  icon_color: |-
-                                    {% if is_state(entity, 'on') %} 
-                                    {% else %}
-                                     var(--primary-text-color)
-                                    {% endif %}
-                              alignment: start
-                            - type: custom:button-card
-                              show_name: false
-                              show_icon: false
-                              tap_action:
-                                action: none
-                              styles:
-                                card:
-                                  - background: none
-                                  - box-shadow: none
-                      card_mod:
-                        style: |
-                          :host {
-                            --simple-swipe-card-pagination-dot-active-color: var(--md-sys-color-tertiary);
-                            --simple-swipe-card-pagination-dot-inactive-color: var(--md-sys-color-on-tertiary);
-                            --simple-swipe-card-pagination-dot-size: 7px;
-                          }
                     - entities:
                         - entity: calendar.recycling
                           accent_color: blue
@@ -1637,22 +1576,78 @@ views:
                       - condition: or
                         conditions:
                           - condition: state
-                            entity: media_player.
-                            state: playing
-                          - condition: state
-                            entity: media_player.living_area_soundbar
+                            entity: media_player.lounge_tv
                             state: 'on'
                     chip:
-                      type: template
-                      entity: media_player.living_area_soundbar
-                      content: |
-                        {{ expand(states.media_player.living_area_soundbar)
-                            | selectattr('state', 'eq', 'playing')
-                            | list | count }}
-                      icon: m3of:music-note
-                      icon_color: var(--primary-text-color)
-                      tap_action:
-                        action: more-info
+                      type: entity
+                      entity: media_player.lounge_tv
+                      content_info: name
+                  - type: conditional
+                    conditions:
+                      - condition: or
+                        conditions:
+                          - condition: state
+                            entity: media_player.snug_tv
+                            state: 'on'
+                    chip:
+                      type: entity
+                      entity: media_player.snug_tv
+                      content_info: name
+                  - type: conditional
+                    conditions:
+                      - condition: or
+                        conditions:
+                          - condition: state
+                            entity: media_player.kitchen_speaker
+                            state: playing
+                    chip:
+                      type: entity
+                      entity: media_player.kitchen_speaker
+                      content_info: name
+                  - type: conditional
+                    conditions:
+                      - condition: or
+                        conditions:
+                          - condition: state
+                            entity: media_player.kitchen_hub
+                            state: playing
+                    chip:
+                      type: entity
+                      entity: media_player.kitchen_hub
+                      content_info: name
+                  - type: conditional
+                    conditions:
+                      - condition: or
+                        conditions:
+                          - condition: state
+                            entity: media_player.office_hub
+                            state: playing
+                    chip:
+                      type: entity
+                      entity: media_player.office_hub
+                      content_info: name
+                  - type: conditional
+                    conditions:
+                      - condition: or
+                        conditions:
+                          - condition: state
+                            entity: media_player.quinn_s_hub
+                            state: playing
+                    chip:
+                      type: entity
+                      entity: media_player.quinn_s_hub
+                      content_info: name
+                  - type: conditional
+                    conditions:
+                      - condition: or
+                        conditions:
+                          - condition: state
+                            entity: media_player.attic_speaker
+                            state: playing
+                    chip:
+                      type: entity
+                      entity: media_player.attic_speaker
+                      content_info: name
                 alignment: start
               - square: false
                 type: grid
@@ -2672,8 +2667,6 @@ views:
                 popup:
                   - icon: m3of:tools-wrench
                     url: /config/dashboard
-                  - icon: m3of:sprinkler
-                    url: /mobile-dashboard/irrigation
                   - icon: m3of:server-person
                     url: /mobile-dashboard/server
                   - icon: m3of:colors
@@ -2698,7 +2691,7 @@ views:
                 overflow: hidden;
               }
             media_player:
-              entity: media_player.your_media_here
+              entity: media_player.all_speakers
               album_cover_background: true
               tap_action:
                 action: navigate
@@ -2713,6 +2706,7 @@ views:
       size: cover
       repeat: repeat
       attachment: fixed
+    badges: []
   - type: sections
     max_columns: 4
     title: Rooms
@@ -3938,10 +3932,6 @@ views:
                     url: /mobile-dashboard/multiple-guest
                   - icon: m3of:computer
                     url: /mobile-dashboard/office
-              - url: /mobile-dashboard/scenes
-                label: Scenes
-                icon: m3o:layers
-                icon_selected: m3of:layers
               - url: /mobile-dashboard/camera
                 label: Camera
                 icon: m3o:camera
@@ -3953,6 +3943,17 @@ views:
                 popup:
                   - icon: m3of:tools-wrench
                     url: /config/dashboard
+                  - icon: m3of:server-person
+                    url: /mobile-dashboard/server
+                  - icon: m3of:colors
+                    url: /material-you-configuration
+                  - icon: m3of:power-settings-new
+                    tap_action:
+                      action: call-service
+                      service: homeassistant.restart
+                      service_data: {}
+                      confirmation:
+                        text: Are you sure you want to restart Home Assistant?
             styles: |
               .navbar-card {
                 --navbar-primary-color: var(--md-sys-color-tertiary);
@@ -4010,7 +4011,7 @@ views:
                       template: mushroom_title_subtitle_card
                       variables:
                         - title: 🚗 Driveway
-                        - subtitle: '{{ states (''sensor.right_driveway_camera_status'') }}'
+                        - subtitle: ''
                     - type: custom:webrtc-camera
                       streams:
                         - entity: camera.doorbell_medium_resolution_channel
@@ -4019,201 +4020,62 @@ views:
                       streams:
                         - entity: camera.driveway_camera_medium_resolution_channel
                           muted: true
-                    - type: custom:mushroom-chips-card
-                      alignment: start
-                      chips:
-                        - type: template
-                          entity: switch.light_switch_drw
-                          icon: m3of:lightbulb
-                          tap_action:
-                            action: toggle
-                          content: Driveway Light
-                          card_mod:
-                            style:
-                              .: |
-                                ha-card {
-                                  --text-color: {{ 'var(--primary-background-color)' if is_state('switch.light_switch_drw', 'on') else 'none' }};
-                                  --color: {{ 'var(--primary-background-color)'  if is_state('switch.light_switch_drw', 'on') else 'none' }};
-                                  --chip-background: {{ 'var(--md-sys-color-primary)' if is_state('switch.light_switch_drw', 'on') else 'color-mix(in srgb, var(--md-sys-color-surface-variant) 40%, transparent)' }};
-                                }
-                        - type: template
-                          entity: switch.porch_light_drw
-                          icon: m3of:lightbulb
-                          tap_action:
-                            action: toggle
-                          content: Porch Light
-                          card_mod:
-                            style:
-                              .: |
-                                ha-card {
-                                  --text-color: {{ 'var(--primary-background-color)' if is_state('switch.porch_light_drw', 'on') else 'none' }};
-                                  --color: {{ 'var(--primary-background-color)'  if is_state('switch.porch_light_drw', 'on') else 'none' }};
-                                  --chip-background: {{ 'var(--md-sys-color-primary)' if is_state('switch.porch_light_drw', 'on') else 'color-mix(in srgb, var(--md-sys-color-surface-variant) 40%, transparent)' }};
-                                }
-              - title: Walkway
-                icon: mdi:motion-sensor
+              - title: Quinn
+                icon: mdi:toy-brick
                 card:
                   type: vertical-stack
                   cards:
                     - type: custom:decluttering-card
                       template: mushroom_title_subtitle_card
                       variables:
-                        - title: 🚶 Walkway
-                        - subtitle: '{{ states (''sensor.walkway_camera_status'') }}'
+                        - title: 🦖 Quinn
+                        - subtitle: ''
+                    - type: custom:webrtc-camera
+                      streams:
+                        - entity: camera.quinn_high_resolution_channel
+                          muted: true
+              - title: Lounge
+                icon: mdi:television
+                card:
+                  type: vertical-stack
+                  cards:
+                    - type: custom:decluttering-card
+                      template: mushroom_title_subtitle_card
+                      variables:
+                        - title: 📺 Lounge
+                        - subtitle: ''
+                    - type: custom:webrtc-camera
+                      streams:
+                        - entity: camera.lounge_high_resolution_channel
+                          muted: true
+              - title: Kitchen
+                icon: mdi:countertop
+                card:
+                  type: vertical-stack
+                  cards:
+                    - type: custom:decluttering-card
+                      template: mushroom_title_subtitle_card
+                      variables:
+                        - title: 🔪 Kitchen
+                        - subtitle: ''
+                    - type: custom:webrtc-camera
+                      streams:
+                        - entity: camera.snug_high_resolution_channel
+                          muted: true
+              - title: Hall
+                icon: mdi:door
+                card:
+                  type: vertical-stack
+                  cards:
+                    - type: custom:decluttering-card
+                      template: mushroom_title_subtitle_card
+                      variables:
+                        - title: 🚪 Hall
+                        - subtitle: ''
                     - type: custom:webrtc-camera
                       streams:
                         - entity: camera.hall_high_resolution_channel
                           muted: true
-                    - type: custom:mushroom-chips-card
-                      alignment: start
-                      chips:
-                        - type: template
-                          entity: switch.outdoor_light_switch_lr
-                          icon: m3of:laundry
-                          tap_action:
-                            action: toggle
-                          content: Outdoor Laundry Light
-                          card_mod:
-                            style:
-                              .: |
-                                ha-card {
-                                  --text-color: {{ 'var(--primary-background-color)' if is_state('switch.outdoor_light_switch_lr', 'on') else 'none' }};
-                                  --color: {{ 'var(--primary-background-color)'  if is_state('switch.outdoor_light_switch_lr', 'on') else 'none' }};
-                                  --chip-background: {{ 'var(--md-sys-color-primary)' if is_state('switch.outdoor_light_switch_lr', 'on') else 'color-mix(in srgb, var(--md-sys-color-surface-variant) 40%, transparent)' }};
-                                }
-                        - type: template
-                          entity: switch.rear_light_switch_grg
-                          icon: m3of:garage-home
-                          tap_action:
-                            action: toggle
-                          content: Rear Garage Light
-                          card_mod:
-                            style:
-                              .: |
-                                ha-card {
-                                  --text-color: {{ 'var(--primary-background-color)' if is_state('switch.rear_light_switch_grg', 'on') else 'none' }};
-                                  --color: {{ 'var(--primary-background-color)'  if is_state('switch.rear_light_switch_grg', 'on') else 'none' }};
-                                  --chip-background: {{ 'var(--md-sys-color-primary)' if is_state('switch.rear_light_switch_grg', 'on') else 'color-mix(in srgb, var(--md-sys-color-surface-variant) 40%, transparent)' }};
-                                }
-                    - type: vertical-stack
-                      cards:
-                        - type: custom:webrtc-camera
-                          streams:
-                            - entity: camera.right_walkway_camera_clear
-                              mode: webrtc
-                              muted: true
-                        - type: custom:mushroom-chips-card
-                          alignment: start
-                          chips:
-                            - type: template
-                              entity: switch.patio_main_switch_la
-                              icon: m3of:lightbulb
-                              tap_action:
-                                action: toggle
-                              card_mod:
-                                style:
-                                  .: |
-                                    ha-card {
-                                      --text-color: {{ 'var(--primary-background-color)' if is_state('switch.patio_main_switch_la', 'on') else 'none' }};
-                                      --color: {{ 'var(--primary-background-color)'  if is_state('switch.patio_main_switch_la', 'on') else 'none' }};
-                                      --chip-background: {{ 'var(--md-sys-color-primary)' if is_state('switch.patio_main_switch_la', 'on') else 'color-mix(in srgb, var(--md-sys-color-surface-variant) 40%, transparent)' }};
-                                    }
-                              content: Main Patio Light
-                            - type: template
-                              entity: switch.patio_side_switch_la
-                              icon: mdi:outdoor-lamp
-                              tap_action:
-                                action: toggle
-                              content: Side Patio Light
-                              card_mod:
-                                style:
-                                  .: |
-                                    ha-card {
-                                      --text-color: {{ 'var(--primary-background-color)' if is_state('switch.patio_side_switch_la', 'on') else 'none' }};
-                                      --color: {{ 'var(--primary-background-color)'  if is_state('switch.patio_side_switch_la', 'on') else 'none' }};
-                                      --chip-background: {{ 'var(--md-sys-color-primary)' if is_state('switch.patio_side_switch_la', 'on') else 'color-mix(in srgb, var(--md-sys-color-surface-variant) 40%, transparent)' }};
-                                    }
-              - title: Garage
-                icon: m3of:garage
-                card:
-                  type: vertical-stack
-                  cards:
-                    - type: custom:decluttering-card
-                      template: mushroom_title_subtitle_card
-                      variables:
-                        - title: 🚗 Garage
-                        - subtitle: '{{ states (''sensor.garage_camera_status'') }}'
-                    - type: vertical-stack
-                      cards:
-                        - type: custom:webrtc-camera
-                          streams:
-                            - entity: camera.garage_camera_clear
-                              mode: webrtc
-                              muted: true
-                    - type: custom:mushroom-chips-card
-                      alignment: start
-                      chips:
-                        - type: template
-                          entity: switch.light_switch_grg
-                          icon: mdi:garage-variant
-                          tap_action:
-                            action: toggle
-                          content: Garage Light
-                          card_mod:
-                            style:
-                              .: |
-                                ha-card {
-                                  --text-color: {{ 'var(--primary-background-color)' if is_state('switch.light_switch_grg', 'on') else 'none' }};
-                                  --color: {{ 'var(--primary-background-color)' if is_state('switch.light_switch_grg', 'on') else 'none' }};
-                                  --chip-background: {{ 'var(--md-sys-color-primary)' if is_state('switch.light_switch_grg', 'on') else 'color-mix(in srgb, var(--md-sys-color-surface-variant) 40%, transparent)' }};
-                                }
-                        - type: template
-                          entity: switch.rear_light_switch_grg
-                          icon: mdi:outdoor-lamp
-                          tap_action:
-                            action: toggle
-                          content: Rear Garage Light
-                          card_mod:
-                            style:
-                              .: |
-                                ha-card {
-                                  --text-color: {{ 'var(--primary-background-color)' if is_state('switch.rear_light_switch_grg', 'on') else 'none' }};
-                                  --color: {{ 'var(--primary-background-color)' if is_state('switch.rear_light_switch_grg', 'on') else 'none' }};
-                                  --chip-background: {{ 'var(--md-sys-color-primary)' if is_state('switch.rear_light_switch_grg', 'on') else 'color-mix(in srgb, var(--md-sys-color-surface-variant) 40%, transparent)' }};
-                                }
-              - title: Backyard
-                icon: mdi:tree
-                card:
-                  type: vertical-stack
-                  cards:
-                    - type: custom:decluttering-card
-                      template: mushroom_title_subtitle_card
-                      variables:
-                        - title: 🏡 Backyard
-                        - subtitle: '{{ states (''sensor.backyard_camera_status'') }}'
-                    - type: vertical-stack
-                      cards:
-                        - type: custom:webrtc-camera
-                          streams:
-                            - entity: camera.right_backyard_camera_clear
-                              mode: webrtc
-                              muted: true
-                        - type: custom:mushroom-chips-card
-                          alignment: start
-                          chips:
-                            - type: template
-                              entity: switch.patio_main_switch_la
-                              icon: m3of:lightbulb
-                              tap_action:
-                                action: toggle
-                              content: Main Patio Light
-                              card_mod:
-                                style:
-                                  .: |
-                                    ha-card {
-                                      --text-color: {{ 'var(--primary-background-color)' if is_state('switch.patio_main_switch_la', 'on') else 'none' }};
-                                      --color: {{ 'var(--primary-background-color)'  if is_state('switch.patio_main_switch_la', 'on') else 'none' }};
-                                      --chip-background: {{ 'var(--md-sys-color-primary)' if is_state('switch.patio_main_switch_la', 'on') else 'color-mix(in srgb, var(--md-sys-color-surface-variant) 40%, transparent)' }};
       - type: grid
         cards:
           - type: custom:navbar-card
@@ -4252,10 +4114,6 @@ views:
                     url: /mobile-dashboard/multiple-guest
                   - icon: m3of:computer
                     url: /mobile-dashboard/office
-              - url: /mobile-dashboard/scenes
-                label: Scenes
-                icon: m3o:layers
-                icon_selected: m3of:layers
               - url: /mobile-dashboard/camera
                 label: Camera
                 icon: m3o:camera
@@ -4267,8 +4125,17 @@ views:
                 popup:
                   - icon: m3of:tools-wrench
                     url: /config/dashboard
-                  - icon: m3of:gallery-thumbnail
-                    url: /mobile-dashboard/camera-timeline
+                  - icon: m3of:server-person
+                    url: /mobile-dashboard/server
+                  - icon: m3of:colors
+                    url: /material-you-configuration
+                  - icon: m3of:power-settings-new
+                    tap_action:
+                      action: call-service
+                      service: homeassistant.restart
+                      service_data: {}
+                      confirmation:
+                        text: Are you sure you want to restart Home Assistant?
             styles: |
               .navbar-card {
                 --navbar-primary-color: var(--md-sys-color-tertiary);
@@ -6962,461 +6829,6 @@ views:
       attachment: fixed
   - type: sections
     max_columns: 4
-    title: Irrigation
-    path: irrigation
-    icon: m3of:sprinkler
-    subview: true
-    sections:
-      - type: grid
-        cards:
-          - type: custom:simple-tabs
-            pre-load: true
-            active-background: var(--md-sys-color-tertiary)
-            active-text-color: var(--md-sys-color-on-tertiary)
-            text-color: var(--primary-text-color)
-            tabs:
-              - title: Driveway
-                icon: mdi:car
-                card:
-                  type: vertical-stack
-                  cards:
-                    - type: custom:decluttering-card
-                      template: mushroom_title_subtitle_card
-                      variables:
-                        - title: 🚗 Driveway
-                        - subtitle: '{{ states(''sensor.driveway_water_tap_status'') }}'
-                    - type: custom:vertical-stack-in-card
-                      cards:
-                        - type: horizontal-stack
-                          cards:
-                            - type: custom:mushroom-template-card
-                              entity: switch.driveway_water_tap
-                              primary: >
-                                {{ states('sensor.driveway_water_tap_flow') |
-                                round(1) }} m³/h
-                              secondary: >
-                                {% set flow =
-                                states('sensor.driveway_water_tap_flow') |
-                                float(0) %}
-
-                                {% if is_state('switch.driveway_water_tap',
-                                'on') %}
-                                  {% if flow < 0.1 %} Minimal Water Flow
-                                  {% elif flow < 0.3 %} Low Water Flow
-                                  {% elif flow < 0.6 %} Moderate Water Flow
-                                  {% else %} High Water Flow
-                                  {% endif %}
-                                {% else %}
-                                  Water Flow
-                                {% endif %}
-                              icon: m3of:sprinkler
-                              tap_action:
-                                action: toggle
-                              color: >
-                                {% set flow =
-                                states('sensor.driveway_water_tap_flow') | float
-                                %}
-
-                                {% if flow < 0.1 %} #A9A9A9
-
-                                {% elif flow < 0.3 %} #ffd34f
-
-                                {% elif flow < 0.6 %} #9fe7e8
-
-                                {% else %} #36a9e2
-
-                                {% endif %}
-                              features_position: bottom
-                            - type: conditional
-                              conditions:
-                                - condition: state
-                                  entity: timer.driveway_sprinkler_timer
-                                  state: active
-                              card:
-                                type: custom:timer-bar-card
-                                entity: timer.driveway_sprinkler_timer
-                                name: Sprinkler
-                                invert: true
-                                bar_direction: ltr
-                                bar_width: 60%
-                                mushroom:
-                                  layout: horizontal
-                                  color: '#4CBB17'
-                        - type: custom:config-template-card
-                          entities:
-                            - sensor.driveway_water_tap_flow
-                          variables:
-                            - states['sensor.driveway_water_tap_flow'].state
-                          card:
-                            type: custom:mini-graph-card
-                            entities:
-                              - entity: sensor.driveway_water_tap_flow
-                                name: Driveway Water Flow
-                                color: |-
-                                  ${vars[0] < 0.1 ? '#a9a9a9' :     
-                                    (vars[0] < 0.3 ? '#ffd34f' :
-                                    (vars[0] < 0.6 ? '#9fe7e8' :
-                                    '#36a9e2'))}
-                            hours_to_show: 24
-                            line_width: 3
-                            font_size: 50
-                            animate: true
-                            height: 150
-                            show:
-                              name: false
-                              icon: false
-                              state: false
-                              legend: false
-                              fill: fade
-                    - type: custom:decluttering-card
-                      template: mushroom_title_card
-                      variables:
-                        - title: Irrigation Control
-                    - type: horizontal-stack
-                      cards:
-                        - type: custom:mushroom-template-card
-                          icon: mdi:timer-outline
-                          primary: 5 min
-                          tap_action:
-                            action: call-service
-                            service: script.start_driveway_timer
-                            data:
-                              duration: '00:05:00'
-                          vertical: true
-                          color: var(--primary-text-color)
-                          features_position: bottom
-                        - type: custom:mushroom-template-card
-                          icon: mdi:timer-outline
-                          primary: 15 min
-                          tap_action:
-                            action: call-service
-                            service: script.start_driveway_timer
-                            data:
-                              duration: '00:15:00'
-                          layout: vertical
-                          color: var(--primary-text-color)
-                        - type: custom:mushroom-template-card
-                          icon: mdi:timer-outline
-                          primary: 30 min
-                          tap_action:
-                            action: call-service
-                            service: script.start_driveway_timer
-                            data:
-                              duration: '00:30:00'
-                          layout: vertical
-                          color: var(--primary-text-color)
-                        - type: custom:mushroom-template-card
-                          icon: mdi:timer-outline
-                          primary: 1 hr
-                          tap_action:
-                            action: call-service
-                            service: script.start_driveway_timer
-                            data:
-                              duration: '01:00:00'
-                          layout: vertical
-                          color: var(--primary-text-color)
-                        - type: custom:mushroom-template-card
-                          icon: mdi:timer-outline
-                          primary: 2 hr
-                          tap_action:
-                            action: call-service
-                            service: script.start_driveway_timer
-                            data:
-                              duration: '02:00:00'
-                          layout: vertical
-                          color: var(--primary-text-color)
-              - title: Backyard
-                icon: mdi:tree
-                card:
-                  type: vertical-stack
-                  cards:
-                    - type: custom:decluttering-card
-                      template: mushroom_title_subtitle_card
-                      variables:
-                        - title: 🐌 Backyard
-                        - subtitle: '{{ states(''sensor.backyard_water_tap_status'') }}'
-                    - type: custom:vertical-stack-in-card
-                      cards:
-                        - type: horizontal-stack
-                          cards:
-                            - type: custom:mushroom-template-card
-                              entity: switch.backyard_water_tap
-                              primary: >
-                                {{ states('sensor.backyard_water_tap_flow') |
-                                round(1) }} m³/h
-                              secondary: >
-                                {% set flow =
-                                states('sensor.backyard_water_tap_flow') |
-                                float(0) %}
-
-                                {% if is_state('switch.backyard_water_tap',
-                                'on') %}
-                                  {% if flow < 0.1 %} Minimal Water Flow
-                                  {% elif flow < 0.3 %} Low Water Flow
-                                  {% elif flow < 0.6 %} Moderate Water Flow
-                                  {% else %} High Water Flow
-                                  {% endif %}
-                                {% else %}
-                                  Water Flow
-                                {% endif %}
-                              icon: m3of:sprinkler
-                              tap_action:
-                                action: toggle
-                              color: >
-                                {% set flow =
-                                states('sensor.backyard_water_tap_flow') | float
-                                %}
-
-                                {% if flow < 0.1 %} #A9A9A9
-
-                                {% elif flow < 0.3 %} #ffd34f
-
-                                {% elif flow < 0.6 %} #9fe7e8
-
-                                {% else %} #36a9e2
-
-                                {% endif %}
-                              features_position: bottom
-                            - type: conditional
-                              conditions:
-                                - condition: state
-                                  entity: timer.backyard_sprinkler_timer
-                                  state: active
-                              card:
-                                type: custom:timer-bar-card
-                                entity: timer.backyard_sprinkler_timer
-                                name: Sprinkler
-                                invert: true
-                                bar_direction: ltr
-                                bar_width: 60%
-                                mushroom:
-                                  layout: horizontal
-                                  color: '#4CBB17'
-                        - type: custom:config-template-card
-                          entities:
-                            - sensor.backyard_water_tap_flow
-                          variables:
-                            - states['sensor.backyard_water_tap_flow'].state
-                          card:
-                            type: custom:mini-graph-card
-                            entities:
-                              - entity: sensor.backyard_water_tap_flow
-                                name: Backyard Water Flow
-                                color: |-
-                                  ${vars[0] < 0.1 ? '#a9a9a9' :     
-                                    (vars[0] < 0.3 ? '#ffd34f' :
-                                    (vars[0] < 0.6 ? '#9fe7e8' :
-                                    '#36a9e2'))}
-                            hours_to_show: 24
-                            line_width: 3
-                            font_size: 50
-                            animate: true
-                            height: 150
-                            show:
-                              name: false
-                              icon: false
-                              state: false
-                              legend: false
-                              fill: fade
-                        - type: horizontal-stack
-                          cards:
-                            - type: custom:mushroom-template-card
-                              entity: sensor.average_backyard_soil_humidity
-                              icon: m3of:water-drop
-                              primary: >
-                                {% set moisture =
-                                states('sensor.average_backyard_soil_humidity')
-                                | float(0) %} Moisture: {{ moisture | round(1)
-                                }} %
-                              secondary: >
-                                {% set moisture =
-                                states('sensor.average_backyard_soil_humidity')
-                                | float(0) %}
-
-                                {% if moisture < 15 %}
-                                  Very Dry
-                                {% elif moisture < 25 %}
-                                  Dry
-                                {% elif moisture < 45 %}
-                                  Moist
-                                {% else %}
-                                  Wet
-                                {% endif %}
-                              color: >
-                                {% set moisture =
-                                states('sensor.average_backyard_soil_humidity')
-                                | float(0) %} {% if moisture < 15 %}
-                                  #A9A9A9
-                                {% elif moisture < 25 %}
-                                  #ffd34f
-                                {% elif moisture < 45 %}
-                                  #9fe7e8
-                                {% else %}
-                                  #36a9e2
-                                {% endif %}
-                              features_position: bottom
-                              multiline_secondary: true
-                            - type: custom:mushroom-template-card
-                              entity: sensor.average_backyard_soil_temperature
-                              icon: m3of:thermometer
-                              primary: >
-                                {% set temp =
-                                states('sensor.average_backyard_soil_temperature')
-                                | float(0) %} Temp: {{ temp | round(1) }} {{
-                                state_attr('weather.forecast_home',
-                                'temperature_unit') }}
-                              secondary: >
-                                {% set temp =
-                                states('sensor.average_backyard_soil_temperature')
-                                | float(0) %}
-
-                                {% if temp < 16 %}
-                                  Very Cold
-                                {% elif temp < 18 %}
-                                  Cool
-                                {% elif temp < 22 %}
-                                  Mild
-                                {% elif temp < 24 %}
-                                  Warm
-                                {% elif temp < 27 %}
-                                  Hot
-                                {% else %}
-                                  Very Hot
-                                {% endif %}
-                              color: >
-                                {% set temp =
-                                states('sensor.average_backyard_soil_temperature')
-                                | float(0) %} {% if temp < 16 %}
-                                  #CEB2F5
-                                {% elif temp < 18 %}
-                                  #5EBDEE
-                                {% elif temp < 22 %}
-                                  #9cc8b8
-                                {% elif temp < 24 %}
-                                  #e7b562
-                                {% elif temp < 27 %}
-                                  #FF564B
-                                {% else %}
-                                  #99332d
-                                {% endif %}
-                              features_position: bottom
-                              multiline_secondary: true
-                    - type: custom:decluttering-card
-                      template: mushroom_title_card
-                      variables:
-                        - title: Irrigation Control
-                    - type: horizontal-stack
-                      cards:
-                        - type: custom:mushroom-template-card
-                          icon: mdi:timer-outline
-                          primary: 5 min
-                          tap_action:
-                            action: call-service
-                            service: script.start_backyard_timer
-                            data:
-                              duration: '00:05:00'
-                          vertical: true
-                          color: var(--primary-text-color)
-                        - type: custom:mushroom-template-card
-                          icon: mdi:timer-outline
-                          primary: 15 min
-                          tap_action:
-                            action: call-service
-                            service: script.start_backyard_timer
-                            data:
-                              duration: '00:15:00'
-                          layout: vertical
-                          color: var(--primary-text-color)
-                        - type: custom:mushroom-template-card
-                          icon: mdi:timer-outline
-                          primary: 30 min
-                          tap_action:
-                            action: call-service
-                            service: script.start_backyard_timer
-                            data:
-                              duration: '00:30:00'
-                          layout: vertical
-                          color: var(--primary-text-color)
-                        - type: custom:mushroom-template-card
-                          icon: mdi:timer-outline
-                          primary: 1 hr
-                          tap_action:
-                            action: call-service
-                            service: script.start_backyard_timer
-                            data:
-                              duration: '01:00:00'
-                          layout: vertical
-                          color: var(--primary-text-color)
-                        - type: custom:mushroom-template-card
-                          icon: mdi:timer-outline
-                          primary: 2 hr
-                          tap_action:
-                            action: call-service
-                            service: script.start_backyard_timer
-                            data:
-                              duration: '02:00:00'
-                          layout: vertical
-                          color: var(--primary-text-color)
-    badges:
-      - type: custom:decluttering-card
-        template: nav_chip
-        variables:
-          - navigation_path: /mobile-dashboard/overview
-          - icon: m3of:arrow-left-alt
-    header:
-      layout: responsive
-      badges_position: top
-      badges_wrap: wrap
-      card:
-        type: vertical-stack
-        cards:
-          - type: custom:decluttering-card
-            template: mushroom_room_title_card
-            variables:
-              - title: 💧 Irrigation
-          - type: custom:paper-buttons-row
-            styles:
-              justify-content: flex-start
-              flex-wrap: wrap
-              font-size: 0.9em
-              line-height: 1.2em
-              margin: 0 0 0 6px
-              width: 100%
-            buttons:
-              - layout: name
-                name: Current water restriction
-                styles:
-                  button:
-                    flex-basis: 1
-                    flex-shrink: 0
-                  name:
-                    color: var(--primary-text-color)
-              - layout: name
-                entity: update.home_assistant_operating_system_update
-                name: '{{ states(''sensor.current_water_restriction'') }} '
-                tap_action:
-                  action: more-info
-                styles:
-                  icon:
-                    color: var(--md-sys-color-on-primary)
-                  name:
-                    color: var(--md-sys-color-on-primary)
-                    font-weight: bold
-                  button:
-                    padding: 2px 8px
-                    background-color: var(--md-sys-color-primary)
-                    border-radius: 24px
-                    flex-basis: 1
-                    flex-shrink: 0
-    background:
-      opacity: 40
-      alignment: center
-      size: cover
-      repeat: repeat
-      attachment: fixed
-    cards: []
-  - type: sections
-    max_columns: 4
     title: Server
     path: server
     icon: m3of:server-person
@@ -7428,133 +6840,38 @@ views:
               - type: custom:decluttering-card
                 template: mushroom_title_subtitle_card
                 variables:
-                  - title: Proxmox
-                  - subtitle: >-
-                      {% set cpu = states('sensor.node_pve_cpu_used') | float(0)
-                      %}{% set mem =
-                      states('sensor.node_pve_memory_used_percentage') |
-                      float(0) %}{% set temp =
-                      states('sensor.disk_pve_bc511_nvme_sk_hynix_256gb_temperature')
-                      | float(0) %}{% if cpu > 75 or mem > 75 or temp > 70 %}🟥
-                      CPU: {{ cpu | round(1) }}% • Memory: {{ mem | round(1) }}%
-                      • NVMe: {{ temp | round(1) }}{{
-                      state_attr('weather.forecast_home', 'temperature_unit')
-                      }}{% elif cpu > 50 or mem > 50 or temp > 55 %}🟧 CPU: {{
-                      cpu | round(1) }}% • Memory: {{ mem | round(1) }}% • NVMe:
-                      {{ temp | round(1) }}{{
-                      state_attr('weather.forecast_home', 'temperature_unit')
-                      }}{% else %}🟩 CPU: {{ cpu | round(1) }}% • Memory: {{ mem
-                      | round(1) }}% • NVMe: {{ temp | round(1) }}{{
-                      state_attr('weather.forecast_home', 'temperature_unit')
-                      }}{% endif %}
-              - type: horizontal-stack
-                cards:
-                  - type: gauge
-                    entity: sensor.disk_pve_bc511_nvme_sk_hynix_256gb_temperature
-                    name: SSD Temperature
-                    min: 20
-                    max: 80
-                    severity:
-                      green: 40
-                      yellow: 55
-                      red: 70
-                    unit: °C
-                  - type: gauge
-                    entity: sensor.node_pve_memory_used
-                    name: Memory Used
-                    max: 16.57
-                    severity:
-                      green: 6
-                      yellow: 8
-                      red: 12
-              - type: custom:decluttering-card
-                template: mushroom_title_subtitle_card
-                variables:
                   - title: HA OS
                   - subtitle: >-
-                      {% set cpu = states('sensor.qemu_haos14_2_100_cpu_used') |
-                      float(0) %}{% set mem =
-                      states('sensor.qemu_haos14_2_100_memory_used') | float(0)
-                      %}{% set health =
-                      states('binary_sensor.qemu_haos14_2_100_health') %}{% set
-                      boot = states('sensor.qemu_haos14_2_100_last_boot') %}{%
-                      if cpu > 75 or mem > 75 or health == 'on' %}🟥{% elif cpu
-                      > 50 or mem > 50 %}🟧{% else %}🟩{% endif %} CPU: {{ cpu |
-                      round(1) }}% • MEM: {{ mem | round(1)
+                      {% set cpu = states('sensor.system_monitor_processor_use')
+                      | float(0) %}{% set mem =
+                      states('sensor.system_monitor_memory_usage') | float(0)
+                      %}{% set boot = states('sensor.system_monitor_last_boot')
+                      %}{% if cpu > 75 or mem > 75 %}🟥{% elif cpu > 50 or mem >
+                      50 %}🟧{% else %}🟩{% endif %} CPU: {{ cpu | round(1) }}%
+                      • Memory: {{ mem | round(1)
                       }}%                                                                                      
-                      Health: {{ 'OK' if health == 'off' else '❌'}} • Last Boot:
-                      {{ as_timestamp(boot) | timestamp_custom('%d %b %H:%M') }}
+                      Last Boot: {{ as_timestamp(boot) | timestamp_custom('%d %b
+                      %H:%M') }}
               - type: horizontal-stack
                 cards:
                   - type: gauge
-                    entity: sensor.qemu_haos14_2_100_memory_free
+                    entity: sensor.system_monitor_memory_free
                     name: Memory Free
-                    max: 8.59
+                    max: 8192
                     severity:
-                      green: 6
-                      yellow: 3
-                      red: 0
+                      green: 5120
+                      yellow: 3072
+                      red: 2048
                   - type: gauge
-                    entity: sensor.qemu_haos14_2_100_memory_used
+                    entity: sensor.system_monitor_memory_use
                     name: Memory Used
-                    max: 8.59
+                    max: 8192
                     severity:
-                      green: 3
-                      yellow: 4
-                      red: 6
+                      green: 0
+                      yellow: 5120
+                      red: 6144
       - type: grid
         cards:
-          - type: vertical-stack
-            cards:
-              - type: custom:decluttering-card
-                template: mushroom_title_subtitle_card
-                variables:
-                  - title: Network
-                  - subtitle: >-
-                      {% set dl = states('sensor.download_speed_mbps') |
-                      float(0) %}{% set ul = states('sensor.upload_speed_mbps')
-                      | float(0) %}{% if dl < 10 or ul < 2 %}🟥 Download: {{ dl
-                      | round(1) }} Mbps • Upload: {{ ul | round(1) }} Mbps{%
-                      elif dl < 30 or ul < 5 %}🟧 Download: {{ dl | round(1) }}
-                      Mbps • Upload: {{ ul | round(1) }} Mbps{% else %}🟩
-                      Download: {{ dl | round(1) }} Mbps • Upload: {{ ul |
-                      round(1) }} Mbps{% endif %}
-              - type: custom:apexcharts-card
-                header:
-                  show: true
-                  show_states: true
-                  colorize_states: true
-                graph_span: 24h
-                span:
-                  end: minute
-                apex_config:
-                  chart:
-                    height: 180
-                    toolbar:
-                      show: false
-                  stroke:
-                    width: 2
-                  legend:
-                    show: false
-                  fill:
-                    type: gradient
-                    gradient:
-                      shadeIntensity: 0.4
-                      opacityFrom: 0.5
-                      opacityTo: 0
-                      stops:
-                        - 0
-                        - 90
-                        - 100
-                series:
-                  - entity: sensor.download_speed_mbps
-                    name: Download
-                    color: '#42a5f5'
-                    type: area
-                  - entity: sensor.upload_speed_mbps
-                    name: Upload
-                    color: '#66bb6a'
-                    type: area
           - type: vertical-stack
             cards:
               - type: custom:decluttering-card
