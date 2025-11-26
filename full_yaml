@@ -3149,6 +3149,23 @@ views:
                               box-shadow: none !important;
                               border-radius: 22px !important;
                             }
+                      - type: template
+                        entity: input_boolean.bathroom_extractor_override
+                        tap_action:
+                          action: toggle
+                        icon: mdi:fan
+                        card_mod:
+                          style: |
+                            ha-card {
+                              --chip-background: {% if is_state('switch.bathroom_extractor_fan', 'on') %} #D3C890 {% else %} #353535 {% endif %};
+                              --color: {% if is_state('switch.bathroom_extractor_fan', 'on') %} #5b5326 {% else %} #dbdbdb {% endif %};
+                              justify-content: center;
+                              height: 35px !important;
+                              width: 35px !important;
+                              border: 0 !important;
+                              box-shadow: none !important;
+                              border-radius: 22px !important;
+                            }
                     card_mod:
                       style: |
                         .chip-container {
