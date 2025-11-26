@@ -3313,6 +3313,112 @@ views:
                       min-width: 50%;
                       height: 186px;
                     }
+          - type: horizontal-stack
+            cards:
+              - type: custom:stack-in-card
+                mode: horizontal
+                cards:
+                  - type: vertical-stack
+                    cards:
+                      - type: custom:decluttering-card
+                        template: room_summary_card
+                        variables:
+                          - room_name: Driveway
+                          - temperature_sensor: sensor.temperature_forecast_next_hour
+                          - humidity_sensor: sensor.humidity_probability_forecast_next_hour
+                          - navigation_path: /mobile-dashboard/rooms
+                      - type: custom:decluttering-card
+                        template: big_icon_toggle_card
+                        variables:
+                          - icon: m3of:garage
+                  - type: custom:mushroom-chips-card
+                    chips:
+                      - type: template
+                        entity: sensor.model_y_battery_level_stable
+                        tap_action:
+                          action: navigate
+                          navigation_path: /mobile-dashboard/lounge
+                        icon: >
+                          {% if
+                          is_state('binary_sensor.lounge_motion_sensor_occupancy',
+                          'on') %}
+                            mdi:motion-sensor
+                          {% else %}
+                            mdi:motion-sensor-off
+                          {% endif %}
+                        card_mod:
+                          style: |
+                            ha-card {
+                              --chip-background: {% if is_state('binary_sensor.lounge_motion_sensor_occupancy', 'on') %} #D3C890 {% else %} #353535 {% endif %};
+                              --color: {% if is_state('binary_sensor.lounge_motion_sensor_occupancy', 'on') %} #5b5326 {% else %} #dbdbdb {% endif %};
+                              justify-content: center;
+                              height: 35px !important;
+                              width: 35px !important;
+                              border: 0 !important;
+                              box-shadow: none !important;
+                              border-radius: 22px !important;
+                            }   
+                      - type: template
+                        entity: sensor.model_y_charging_stable
+                        tap_action:
+                          action: navigate
+                          navigation_path: /mobile-dashboard/lounge
+                        icon: >
+                          {% if
+                          is_state('binary_sensor.lounge_motion_sensor_occupancy',
+                          'on') %}
+                            mdi:motion-sensor
+                          {% else %}
+                            mdi:motion-sensor-off
+                          {% endif %}
+                        card_mod:
+                          style: |
+                            ha-card {
+                              --chip-background: {% if is_state('binary_sensor.lounge_motion_sensor_occupancy', 'on') %} #D3C890 {% else %} #353535 {% endif %};
+                              --color: {% if is_state('binary_sensor.lounge_motion_sensor_occupancy', 'on') %} #5b5326 {% else %} #dbdbdb {% endif %};
+                              justify-content: center;
+                              height: 35px !important;
+                              width: 35px !important;
+                              border: 0 !important;
+                              box-shadow: none !important;
+                              border-radius: 22px !important;
+                            }   
+                    card_mod:
+                      style: |
+                        .chip-container {
+                          flex-flow: column wrap-reverse !important;
+                          display: flex !important;
+                          --chip-spacing: 8px;
+                          margin: 12px;
+                        }
+                        .: |
+                        .container {
+                          align: end;
+                        }
+                card_mod:
+                  style: |
+                    ha-card {
+                      background:
+                      {% set temp = states('sensor.temperature_forecast_next_hour') | float %}
+                        {% if temp < 13 %}
+                          rgba(172, 156, 175, 0.6)
+                        {% elif temp < 16 %}          
+                          rgba(215, 196, 219, 0.6)
+                        {% elif temp < 19 %}
+                          rgba(163, 217, 245, 0.6)
+                        {% elif temp < 22 %}
+                          rgba(205, 227, 219, 0.6)
+                        {% elif temp < 24 %}
+                          rgba(255, 229, 153, 0.6)
+                        {% elif temp < 27 %}
+                          rgba(247, 190, 129, 0.6)
+                        {% else %}
+                          rgba(224, 102, 102, 0.6)
+                        {% endif %};        
+                      max-width: 50%;
+                      min-width: 50%;
+                      height: 186px;
+                    }
       - type: grid
         cards:
           - type: custom:navbar-card
