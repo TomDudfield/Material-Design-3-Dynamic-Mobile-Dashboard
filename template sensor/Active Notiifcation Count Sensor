@@ -8,7 +8,7 @@
         {% if is_state('binary_sensor.all_doors', 'on') %}
           {% set count = count + 1 %}
         {% endif %}
-        {% if is_state('media_player.all_speakers', 'playing') or is_state('media_player.all_speakers', 'on') %}
+        {% if is_state('binary_sensor.doorbell_person_detected', 'on') %}
           {% set count = count + 1 %}
         {% endif %}
         {{ count }}

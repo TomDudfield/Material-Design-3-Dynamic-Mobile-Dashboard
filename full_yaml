@@ -719,8 +719,8 @@ decluttering_templates:
             chips:
               - type: template
                 content: >
-                  {{ expand('[[entity]]') | selectattr('state', 'eq', 'on') |
-                  list | count }}
+                  {{ expand('[[entity]]') | selectattr('state', 'match',
+                  '(on|Playing)') | list | count }}
                 icon: '[[icon]]'
                 icon_color: '[[color]]'
                 tap_action:
@@ -742,6 +742,11 @@ views:
               - subtitle: '{{ now().strftime(''%a %b %-d - %I:%M %p'') }}'
           - type: custom:mushroom-chips-card
             chips:
+              - type: entity
+                show_name: false
+                show_state: true
+                show_icon: true
+                entity: sensor.smart_meter_electricity_power
               - type: conditional
                 conditions:
                   - condition: state
@@ -1213,6 +1218,8 @@ views:
                       weekday_font_size: 12px
                       month_font_size: 10px
                       show_countdown: true
+                      day_separator_width: 1px
+                      day_separator_color: '#03a9f430'
                       show_progress_bar: true
                       progress_bar_color: var(--md-sys-color-primary)
                       weather:
@@ -1474,6 +1481,38 @@ views:
                       show_empty: false
                       sort:
                         method: friendly_name
+                    - type: custom:decluttering-card
+                      template: entity_count_card
+                      variables:
+                        - entity: media_player.all_media
+                        - title: Media
+                        - icon: mdi:multimedia
+                        - color: '#bc000a'
+                    - type: custom:auto-entities
+                      card:
+                        square: false
+                        type: grid
+                        columns: 1
+                      card_param: cards
+                      filter:
+                        include:
+                          - group: media_player.all_media
+                            options:
+                              type: custom:mediocre-media-player-card
+                              entity_id: this.entity_id
+                              mode: card
+                              tap_opens_popup: true
+                              search:
+                                enabled: true
+                                show_favorites: true
+                              options:
+                                always_show_power_button: true
+                        exclude:
+                          - state: 'off'
+                          - state: unavailable
+                      show_empty: false
+                      sort:
+                        method: friendly_name
       - type: grid
         cards:
           - type: vertical-stack
@@ -1537,83 +1576,6 @@ views:
                         {% else %} {% endif %}      
                       tap_action:
                         action: more-info
-                  - type: conditional
-                    conditions:
-                      - condition: or
-                        conditions:
-                          - condition: state
-                            entity: media_player.lounge_tv
-                            state: 'on'
-                    chip:
-                      type: entity
-                      entity: media_player.lounge_tv
-                      content_info: name
-                  - type: conditional
-                    conditions:
-                      - condition: or
-                        conditions:
-                          - condition: state
-                            entity: media_player.snug_tv
-                            state: 'on'
-                    chip:
-                      type: entity
-                      entity: media_player.snug_tv
-                      content_info: name
-                  - type: conditional
-                    conditions:
-                      - condition: or
-                        conditions:
-                          - condition: state
-                            entity: media_player.kitchen_speaker
-                            state: playing
-                    chip:
-                      type: entity
-                      entity: media_player.kitchen_speaker
-                      content_info: name
-                  - type: conditional
-                    conditions:
-                      - condition: or
-                        conditions:
-                          - condition: state
-                            entity: media_player.kitchen_hub
-                            state: playing
-                    chip:
-                      type: entity
-                      entity: media_player.kitchen_hub
-                      content_info: name
-                  - type: conditional
-                    conditions:
-                      - condition: or
-                        conditions:
-                          - condition: state
-                            entity: media_player.office_hub
-                            state: playing
-                    chip:
-                      type: entity
-                      entity: media_player.office_hub
-                      content_info: name
-                  - type: conditional
-                    conditions:
-                      - condition: or
-                        conditions:
-                          - condition: state
-                            entity: media_player.quinn_s_hub
-                            state: playing
-                    chip:
-                      type: entity
-                      entity: media_player.quinn_s_hub
-                      content_info: name
-                  - type: conditional
-                    conditions:
-                      - condition: or
-                        conditions:
-                          - condition: state
-                            entity: media_player.attic_speaker
-                            state: playing
-                    chip:
-                      type: entity
-                      entity: media_player.attic_speaker
-                      content_info: name
                 alignment: start
               - square: false
                 type: grid
@@ -2547,47 +2509,6 @@ views:
                     justify-content: center;
                   }
             title: Kiosk
-          - type: vertical-stack
-            cards:
-              - type: custom:bubble-card
-                card_type: pop-up
-                hash: '#music-player'
-                margin_top_mobile: calc(96vh - 800px)
-                name: Music Player
-                icon: m3of:music-note
-                styles: |-
-                  #root {
-                          height: unset !important;
-                          max-height: 100% !important;
-                          transition: transform var(--md-sys-motion-expressive-spatial-default) !important;
-                        }
-                        .bubble-pop-up-container {
-                          padding-bottom: 64px !important;
-                          
-                        }
-                button_type: name
-              - type: custom:mediocre-massive-media-player-card
-                entity_id: media_player.all_speakers
-                mode: card
-                action: {}
-              - type: custom:bubble-card
-                card_type: separator
-                styles: |-
-                  .bubble-icon,
-                  .bubble-name {
-                    display: none;
-                  }
-                  .bubble-line {
-                    margin-right: 0;
-                    height: 4px;
-                    max-width: 32px;
-                    opacity: 1;
-                    background: var(--md-sys-color-on-surface-variant);
-                  }
-                  .bubble-separator {
-                    height: min-content !important;
-                    justify-content: center;
-                  }
       - type: grid
         cards:
           - type: custom:navbar-card
@@ -2638,6 +2559,8 @@ views:
                 popup:
                   - icon: m3of:tools-wrench
                     url: /config/dashboard
+                  - icon: mdi:lightning-bolt
+                    url: /mobile-dashboard/energy
                   - icon: m3of:server-person
                     url: /mobile-dashboard/server
                   - icon: m3of:colors
@@ -2661,12 +2584,6 @@ views:
                 margin-bottom: 15px;
                 overflow: hidden;
               }
-            media_player:
-              entity: media_player.all_speakers
-              album_cover_background: true
-              tap_action:
-                action: navigate
-                navigation_path: '#music-player'
     icon: m3o:home
     cards: []
     background:
@@ -2773,7 +2690,7 @@ views:
                               border-radius: 22px !important;
                             }
                       - type: template
-                        entity: media_player.lounge_tv
+                        entity: media_player.lounge_tv_cast
                         tap_action:
                           action: more-info
                         icon: mdi:television
@@ -2896,7 +2813,7 @@ views:
                               border-radius: 22px !important;
                             }   
                       - type: template
-                        entity: media_player.snug_tv
+                        entity: media_player.snug_tv_cast
                         tap_action:
                           action: more-info
                         icon: mdi:television
@@ -3437,7 +3354,225 @@ views:
                         {% else %}
                           rgba(224, 102, 102, 0.6)
                         {% endif %};        
-                      max-width: 50%;
+                      max-width: 100%;
+                      min-width: 50%;
+                      height: 186px;
+                    }
+              - type: custom:stack-in-card
+                mode: horizontal
+                cards:
+                  - type: vertical-stack
+                    cards:
+                      - type: custom:decluttering-card
+                        template: room_summary_card
+                        variables:
+                          - room_name: Hall
+                          - temperature_sensor: sensor.landing_temperature
+                          - humidity_sensor: sensor.landing_humidity
+                          - navigation_path: /mobile-dashboard/rooms
+                      - type: custom:decluttering-card
+                        template: big_icon_toggle_card
+                        variables:
+                          - entity: light.hall_bulb
+                          - icon: mdi:home-floor-g
+                  - type: custom:mushroom-chips-card
+                    chips:
+                      - type: template
+                        entity: light.hall_bulb
+                        tap_action:
+                          action: toggle
+                        icon: m3of:lightbulb
+                        card_mod:
+                          style: |
+                            ha-card {
+                              --chip-background: {% if is_state('light.hall_bulb', 'on') %} #D3C890 {% else %} #353535 {% endif %};
+                              --color: {% if is_state('light.hall_bulb', 'on') %} #5b5326 {% else %} #dbdbdb {% endif %};
+                              justify-content: center;
+                              height: 35px !important;
+                              width: 35px !important;
+                              border: 0 !important;
+                              box-shadow: none !important;
+                              border-radius: 22px !important;
+                            }
+                    card_mod:
+                      style: |
+                        .chip-container {
+                          flex-flow: column wrap-reverse !important;
+                          display: flex !important;
+                          --chip-spacing: 8px;
+                          margin: 12px;
+                        }
+                        .: |
+                        .container {
+                          align: end;
+                        }
+                card_mod:
+                  style: |
+                    ha-card {
+                      background:
+                      {% set temp = states('sensor.landing_temperature') | float %}
+                        {% if temp < 13 %}
+                          rgba(172, 156, 175, 0.6)
+                        {% elif temp < 16 %}          
+                          rgba(215, 196, 219, 0.6)
+                        {% elif temp < 19 %}
+                          rgba(163, 217, 245, 0.6)
+                        {% elif temp < 22 %}
+                          rgba(205, 227, 219, 0.6)
+                        {% elif temp < 24 %}
+                          rgba(255, 229, 153, 0.6)
+                        {% elif temp < 27 %}
+                          rgba(247, 190, 129, 0.6)
+                        {% else %}
+                          rgba(224, 102, 102, 0.6)
+                        {% endif %};        
+                      max-width: 100%;
+                      min-width: 50%;
+                      height: 186px;
+                    }
+          - type: horizontal-stack
+            cards:
+              - type: custom:stack-in-card
+                mode: horizontal
+                cards:
+                  - type: vertical-stack
+                    cards:
+                      - type: custom:decluttering-card
+                        template: room_summary_card
+                        variables:
+                          - room_name: Landing
+                          - temperature_sensor: sensor.landing_temperature
+                          - humidity_sensor: sensor.landing_humidity
+                          - navigation_path: /mobile-dashboard/rooms
+                      - type: custom:decluttering-card
+                        template: big_icon_toggle_card
+                        variables:
+                          - entity: light.landing_lights
+                          - icon: mdi:home-floor-1
+                  - type: custom:mushroom-chips-card
+                    chips:
+                      - type: template
+                        entity: light.landing_lights
+                        tap_action:
+                          action: toggle
+                        icon: m3of:lightbulb
+                        card_mod:
+                          style: |
+                            ha-card {
+                              --chip-background: {% if is_state('light.landing_lights', 'on') %} #D3C890 {% else %} #353535 {% endif %};
+                              --color: {% if is_state('light.landing_lights', 'on') %} #5b5326 {% else %} #dbdbdb {% endif %};
+                              justify-content: center;
+                              height: 35px !important;
+                              width: 35px !important;
+                              border: 0 !important;
+                              box-shadow: none !important;
+                              border-radius: 22px !important;
+                            }
+                    card_mod:
+                      style: |
+                        .chip-container {
+                          flex-flow: column wrap-reverse !important;
+                          display: flex !important;
+                          --chip-spacing: 8px;
+                          margin: 12px;
+                        }
+                        .: |
+                        .container {
+                          align: end;
+                        }
+                card_mod:
+                  style: |
+                    ha-card {
+                      background:
+                      {% set temp = states('sensor.landing_temperature') | float %}
+                        {% if temp < 13 %}
+                          rgba(172, 156, 175, 0.6)
+                        {% elif temp < 16 %}          
+                          rgba(215, 196, 219, 0.6)
+                        {% elif temp < 19 %}
+                          rgba(163, 217, 245, 0.6)
+                        {% elif temp < 22 %}
+                          rgba(205, 227, 219, 0.6)
+                        {% elif temp < 24 %}
+                          rgba(255, 229, 153, 0.6)
+                        {% elif temp < 27 %}
+                          rgba(247, 190, 129, 0.6)
+                        {% else %}
+                          rgba(224, 102, 102, 0.6)
+                        {% endif %};        
+                      max-width: 100%;
+                      min-width: 50%;
+                      height: 186px;
+                    }
+              - type: custom:stack-in-card
+                mode: horizontal
+                cards:
+                  - type: vertical-stack
+                    cards:
+                      - type: custom:decluttering-card
+                        template: room_summary_card
+                        variables:
+                          - room_name: Attic
+                          - temperature_sensor: sensor.landing_temperature
+                          - humidity_sensor: sensor.landing_humidity
+                          - navigation_path: /mobile-dashboard/rooms
+                      - type: custom:decluttering-card
+                        template: big_icon_toggle_card
+                        variables:
+                          - entity: light.attic_bulb
+                          - icon: mdi:home-floor-2
+                  - type: custom:mushroom-chips-card
+                    chips:
+                      - type: template
+                        entity: light.attic_bulb
+                        tap_action:
+                          action: toggle
+                        icon: m3of:lightbulb
+                        card_mod:
+                          style: |
+                            ha-card {
+                              --chip-background: {% if is_state('light.attic_bulb', 'on') %} #D3C890 {% else %} #353535 {% endif %};
+                              --color: {% if is_state('light.attic_bulb', 'on') %} #5b5326 {% else %} #dbdbdb {% endif %};
+                              justify-content: center;
+                              height: 35px !important;
+                              width: 35px !important;
+                              border: 0 !important;
+                              box-shadow: none !important;
+                              border-radius: 22px !important;
+                            }
+                    card_mod:
+                      style: |
+                        .chip-container {
+                          flex-flow: column wrap-reverse !important;
+                          display: flex !important;
+                          --chip-spacing: 8px;
+                          margin: 12px;
+                        }
+                        .: |
+                        .container {
+                          align: end;
+                        }
+                card_mod:
+                  style: |
+                    ha-card {
+                      background:
+                      {% set temp = states('sensor.landing_temperature') | float %}
+                        {% if temp < 13 %}
+                          rgba(172, 156, 175, 0.6)
+                        {% elif temp < 16 %}          
+                          rgba(215, 196, 219, 0.6)
+                        {% elif temp < 19 %}
+                          rgba(163, 217, 245, 0.6)
+                        {% elif temp < 22 %}
+                          rgba(205, 227, 219, 0.6)
+                        {% elif temp < 24 %}
+                          rgba(255, 229, 153, 0.6)
+                        {% elif temp < 27 %}
+                          rgba(247, 190, 129, 0.6)
+                        {% else %}
+                          rgba(224, 102, 102, 0.6)
+                        {% endif %};        
+                      max-width: 100%;
                       min-width: 50%;
                       height: 186px;
                     }
@@ -3490,6 +3625,8 @@ views:
                 popup:
                   - icon: m3of:tools-wrench
                     url: /config/dashboard
+                  - icon: mdi:lightning-bolt
+                    url: /mobile-dashboard/energy
                   - icon: m3of:server-person
                     url: /mobile-dashboard/server
                   - icon: m3of:colors
@@ -3671,6 +3808,8 @@ views:
                 popup:
                   - icon: m3of:tools-wrench
                     url: /config/dashboard
+                  - icon: mdi:lightning-bolt
+                    url: /mobile-dashboard/energy
                   - icon: m3of:server-person
                     url: /mobile-dashboard/server
                   - icon: m3of:colors
@@ -3755,7 +3894,7 @@ views:
                       variables:
                         - title: Media
                     - type: custom:mediocre-media-player-card
-                      entity_id: media_player.lounge_tv
+                      entity_id: media_player.lounge_tv_cast
                       tap_opens_popup: true
                       mode: card
                       action: {}
@@ -3925,7 +4064,7 @@ views:
                       variables:
                         - title: Media
                     - type: custom:mediocre-media-player-card
-                      entity_id: media_player.snug_tv
+                      entity_id: media_player.snug_tv_cast
                       tap_opens_popup: true
                       mode: card
                       action: {}
@@ -4502,6 +4641,177 @@ views:
                     border-radius: 24px
                     flex-basis: 1
                     flex-shrink: 0
+      layout: responsive
+      badges_position: top
+      badges_wrap: wrap
+    badges:
+      - type: custom:decluttering-card
+        template: nav_chip
+        variables:
+          - navigation_path: /mobile-dashboard/overview
+          - icon: m3of:arrow-left-alt
+    cards: []
+    subview: true
+    background:
+      opacity: 40
+      alignment: center
+      size: cover
+      repeat: repeat
+      attachment: fixed
+  - type: sections
+    max_columns: 4
+    title: Energy
+    path: energy
+    icon: mdi:lightning-bolt
+    sections:
+      - type: grid
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: custom:decluttering-card
+                template: mushroom_title_subtitle_card
+                variables:
+                  - title: Power
+                  - subtitle: null
+              - type: custom:power-flow-card-plus
+                entities:
+                  battery:
+                    entity: ''
+                    state_of_charge: sensor.pixel_9_battery_level
+                  grid:
+                    entity: sensor.smart_meter_electricity_power
+                    secondary_info: {}
+                  fossil_fuel_percentage:
+                    secondary_info: {}
+                    entity: sensor.carbon_intensity_regional_fossil_fuel_percentage
+                  individual:
+                    - entity: sensor.wall_connector_power
+                      secondary_info: {}
+                      display_zero: true
+                      name: EV Charger
+                      icon: mdi:ev-plug-tesla
+                clickable_entities: true
+                display_zero_lines:
+                  mode: show
+                  transparency: 50
+                  grey_color:
+                    - 189
+                    - 189
+                    - 189
+                use_new_flow_rate_model: true
+                w_decimals: 0
+                kw_decimals: 1
+                min_flow_rate: 0.75
+                max_flow_rate: 6
+                max_expected_power: 2000
+                min_expected_power: 0.01
+                watt_threshold: 1000
+                transparency_zero_lines: 0
+                sort_individual_devices: false
+                dashboard_link: /energy
+                disable_dots: false
+      - type: grid
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: custom:decluttering-card
+                template: mushroom_title_subtitle_card
+                variables:
+                  - title: Heating
+                  - subtitle: null
+              - type: custom:apexcharts-card
+                header:
+                  show: false
+                  show_states: false
+                  colorize_states: true
+                all_series_config:
+                  stroke_width: 1
+                  type: line
+                graph_span: 24h
+                now:
+                  show: true
+                  color: red
+                  label: Now
+                span:
+                  start: day
+                series:
+                  - entity: sensor.house_average_temperature
+                  - entity: sensor.garden_motion_sensor_temperature
+                  - entity: sensor.smart_meter_gas_import_today
+                  - entity: sensor.heating_activity
+      - type: grid
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: custom:decluttering-card
+                template: mushroom_title_subtitle_card
+                variables:
+                  - title: Temperatures
+                  - subtitle: null
+              - type: custom:apexcharts-card
+                header:
+                  show: false
+                  show_states: false
+                  colorize_states: true
+                all_series_config:
+                  stroke_width: 1
+                  type: line
+                series:
+                  - entity: sensor.lounge_temperature_and_humidity_sensor_temperature
+                  - entity: sensor.kitchen_temperature_and_humidity_sensor_temperature
+                  - entity: >-
+                      sensor.master_bedroom_temperature_and_humidity_sensor_temperature
+                  - entity: >-
+                      sensor.quinn_bedroom_temperature_and_humidity_sensor_temperature
+                  - entity: sensor.office_temperature_and_humidity_sensor_temperature
+                  - entity: >-
+                      sensor.guest_bedroom_temperature_and_humidity_sensor_temperature
+                  - entity: >-
+                      sensor.main_bathroom_temperature_and_humidity_sensor_temperature
+    header:
+      card:
+        type: vertical-stack
+        cards:
+          - type: custom:decluttering-card
+            template: mushroom_room_title_card
+            variables:
+              - title: ⚡ Energy
+          - type: custom:paper-buttons-row
+            styles:
+              justify-content: flex-start
+              flex-wrap: wrap
+              font-size: 0.9em
+              line-height: 1.2em
+              margin: 0 0 0 6px
+              width: 100%
+            buttons:
+              - layout: name
+                name: Current usage
+                styles:
+                  button:
+                    flex-basis: 1
+                    flex-shrink: 0
+                  name:
+                    color: var(--primary-text-color)
+              - layout: name
+                entity: sensor.smart_meter_electricity_power
+                name: >-
+                  {{ states('sensor.smart_meter_electricity_power') }} {{
+                  state_attr('sensor.smart_meter_electricity_power',
+                  'unit_of_measurement') }}
+                tap_action:
+                  action: more-info
+                styles:
+                  name:
+                    color: var(--md-sys-color-on-primary)
+                    font-weight: bold
+                  button:
+                    padding: 2px 8px
+                    background-color: var(--md-sys-color-primary)
+                    border-radius: 24px
+                    flex-basis: 1
+                    flex-shrink: 0
+                    display: flex
       layout: responsive
       badges_position: top
       badges_wrap: wrap
