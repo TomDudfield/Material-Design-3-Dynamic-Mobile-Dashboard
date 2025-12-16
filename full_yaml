@@ -2334,6 +2334,32 @@ views:
                                       purple
                                     {% endif %}
                                   features_position: bottom
+                  - title: Tide
+                    icon: mdi:wave
+                    card:
+                      type: vertical-stack
+                      cards:
+                        - type: custom:decluttering-card
+                          template: mushroom_title_subtitle_card
+                          variables:
+                            - title: Tide
+                            - subtitle: null
+                        - type: custom:apexcharts-card
+                          graph_span: 2d
+                          span:
+                            start: hour
+                            offset: '-5h'
+                          now:
+                            show: true
+                            label: now
+                          series:
+                            - entity: sensor.poole_harbour_tide
+                              unit: m
+                              data_generator: >
+                                return entity.attributes.predictions.map((event)
+                                => {
+                                  return [moment.utc(event[0]).local(), event[1]];
+                                });
                   - title: Radar
                     icon: m3of:radar
                     card:
@@ -4425,6 +4451,565 @@ views:
             template: mushroom_room_title_card
             variables:
               - title: 🦖 Quinn's Bedroom
+          - type: custom:paper-buttons-row
+            styles:
+              justify-content: flex-start
+              flex-wrap: wrap
+              font-size: 0.9em
+              line-height: 1.2em
+              margin: 0 0 0 6px
+              width: 100%
+            buttons:
+              - layout: name
+                name: Room is
+                styles:
+                  button:
+                    flex-basis: 1
+                    flex-shrink: 0
+                  name:
+                    color: var(--primary-text-color)
+              - layout: name
+                entity: >-
+                  sensor.quinn_bedroom_temperature_and_humidity_sensor_temperature
+                name: >-
+                  {{
+                  states('sensor.quinn_bedroom_temperature_and_humidity_sensor_temperature')
+                  | float | round(1) }}{{ state_attr('weather.forecast_home',
+                  'temperature_unit') }}
+                tap_action:
+                  action: more-info
+                styles:
+                  icon:
+                    color: var(--md-sys-color-on-primary)
+                  name:
+                    color: var(--md-sys-color-on-primary)
+                    font-weight: bold
+                  button:
+                    padding: 2px 8px
+                    background-color: var(--md-sys-color-primary)
+                    border-radius: 24px
+                    flex-basis: 1
+                    flex-shrink: 0
+                    display: flex
+    cards: []
+    subview: true
+    background:
+      opacity: 90
+      alignment: center
+      size: cover
+      repeat: repeat
+      attachment: fixed
+  - type: sections
+    max_columns: 4
+    icon: m3of:car
+    path: driveway
+    title: Driveway
+    sections:
+      - type: grid
+        cards:
+          - type: custom:simple-tabs
+            pre-load: true
+            active-background: var(--md-sys-color-tertiary)
+            active-text-color: var(--md-sys-color-on-tertiary)
+            text-color: var(--primary-text-color)
+            tabs:
+              - title: Room
+                icon: m3of:home
+                card:
+                  type: vertical-stack
+                  cards:
+                    - type: custom:decluttering-card
+                      template: mushroom_title_card
+                      variables:
+                        - title: Media
+                    - type: custom:mediocre-media-player-card
+                      entity_id: media_player.quinn_s_hub
+                      tap_opens_popup: true
+                      mode: card
+                      action: {}
+              - title: Camera
+                icon: mdi:cctv
+                card:
+                  type: vertical-stack
+                  cards:
+                    - type: custom:webrtc-camera
+                      streams:
+                        - entity: camera.quinn_high_resolution_channel
+                          muted: true
+      - type: grid
+        cards:
+          - type: heading
+            heading: New section
+          - type: custom:vehicle-status-card
+            images:
+              - image: /api/image/serve/451142d28b7f39c6ebe694469766164d/original
+            layout_config:
+              button_grid:
+                rows: 2
+                columns: 2
+                swipe: true
+              images_swipe:
+                height: 150
+              section_order:
+                - indicators
+                - range_info
+                - images
+                - buttons
+              range_info_config:
+                layout: row
+              hide_card_name: true
+              theme_config: {}
+            indicator_rows:
+              - row_items:
+                  - entity: sensor.model_y_inside_temperature_stable
+                    type: entity
+                    show_name: false
+                    show_state: true
+                    show_icon: true
+                    tap_action:
+                      action: more-info
+                  - entity: binary_sensor.nighttime
+                    type: entity
+                    show_name: true
+                    show_state: true
+                    show_icon: true
+                    tap_action:
+                      action: more-info
+                  - entity: switch.refrigerator_express_mode
+                    type: entity
+                    show_name: true
+                    show_state: true
+                    show_icon: true
+                    tap_action:
+                      action: more-info
+                  - type: group
+                    show_name: true
+                    show_icon: true
+                    name: Lights
+                    icon: mdi:lightbulb-group
+                    items:
+                      - entity: light.landing_cupboard_bulb
+                        show_name: true
+                        show_state: true
+                        show_icon: true
+                      - entity: light.wardrobe_light
+                        name: Wardrobe Light
+                        show_name: true
+                        show_state: true
+                        show_icon: true
+                      - entity: light.bathroom_ambient_light
+                        name: Bathroom Ambient Light
+                        show_name: true
+                        show_state: true
+                        show_icon: true
+                      - entity: light.bathroom_light
+                        name: Bathroom Light
+                        show_name: true
+                        show_state: true
+                        show_icon: true
+                  - type: group
+                    show_name: true
+                    show_icon: true
+                    name: Motions
+                    icon: mdi:motion-sensor
+                    items:
+                      - entity: binary_sensor.ring_keypad_motion_detection
+                        name: Motion detection
+                        show_name: true
+                        show_state: true
+                        show_icon: true
+                      - entity: binary_sensor.g4_doorbell_pro_motion
+                        name: Motion
+                        show_name: true
+                        show_state: true
+                        show_icon: true
+                      - entity: binary_sensor.driveway_camera_motion
+                        name: Motion
+                        show_name: true
+                        show_state: true
+                        show_icon: true
+                      - entity: binary_sensor.hall_camera_motion
+                        name: Motion
+                        show_name: true
+                        show_state: true
+                        show_icon: true
+            range_info:
+              - energy_level:
+                  entity: sensor.model_y_battery_level_stable
+                  tap_action:
+                    action: more-info
+                  value_alignment: start
+                  value_position: inside
+                  hide_icon: false
+                range_level:
+                  entity: sensor.model_y_battery_range
+                  value_position: outside
+                charging_entity: sensor.model_y_charging_stable
+                progress_color: '#4271ff'
+                charging_template: '{{ true }}'
+                color_blocks: false
+                color_thresholds: []
+            button_cards:
+              - layout: horizontal
+                transparent: false
+                show_primary: true
+                show_secondary: true
+                show_icon: true
+                entity: button.model_y_play_fart
+                tap_action:
+                  action: more-info
+                hide_button: false
+                button_type: default
+                card_type: default
+                icon_type: icon
+                primary_info: name
+                sub_card:
+                  default_card:
+                    - title: Category default expanded
+                      collapsed_items: false
+                      items:
+                        - entity: device_tracker.pixel_9
+                        - entity: media_player.lounge_tv
+                        - entity: light.landing_cupboard_bulb
+                        - entity: light.wardrobe_light
+                        - entity: binary_sensor.nighttime
+                        - entity: binary_sensor.evening
+                    - title: Category collapsed
+                      collapsed_items: true
+                      items:
+                        - entity: device_tracker.pixel_9
+                        - entity: media_player.lounge_tv
+                        - entity: light.landing_cupboard_bulb
+                        - entity: light.wardrobe_light
+                        - entity: binary_sensor.nighttime
+                        - entity: binary_sensor.evening
+                  custom_card:
+                    - type: entities
+                      title: Custom Card
+                      entities:
+                        - entity: device_tracker.pixel_9
+                        - entity: media_player.lounge_tv
+                        - entity: light.landing_cupboard_bulb
+                        - entity: light.wardrobe_light
+                        - entity: binary_sensor.nighttime
+                        - entity: binary_sensor.evening
+              - layout: horizontal
+                transparent: false
+                show_primary: true
+                show_secondary: true
+                show_icon: true
+                name: Lounge TV
+                entity: media_player.lounge_tv
+                tap_action:
+                  action: toggle
+                hide_button: false
+                button_type: action
+                card_type: custom
+                sub_card:
+                  default_card:
+                    - title: Category default expanded
+                      collapsed_items: false
+                      items:
+                        - entity: device_tracker.pixel_9
+                        - entity: media_player.lounge_tv
+                        - entity: light.landing_cupboard_bulb
+                        - entity: light.wardrobe_light
+                        - entity: binary_sensor.nighttime
+                        - entity: binary_sensor.evening
+                    - title: Category collapsed
+                      collapsed_items: true
+                      items:
+                        - entity: device_tracker.pixel_9
+                        - entity: media_player.lounge_tv
+                        - entity: light.landing_cupboard_bulb
+                        - entity: light.wardrobe_light
+                        - entity: binary_sensor.nighttime
+                        - entity: binary_sensor.evening
+                  custom_card:
+                    - type: entities
+                      title: Custom Card
+                      entities:
+                        - entity: device_tracker.pixel_9
+                        - entity: media_player.lounge_tv
+                        - entity: light.landing_cupboard_bulb
+                        - entity: light.wardrobe_light
+                        - entity: binary_sensor.nighttime
+                        - entity: binary_sensor.evening
+              - layout: horizontal
+                transparent: false
+                show_primary: true
+                show_secondary: true
+                show_icon: true
+                name: light.landing_cupboard_bulb
+                entity: light.landing_cupboard_bulb
+                notify: '{{ true }}'
+                notify_color: >-
+                  {{ iif (is_state('light.landing_cupboard_bulb', 'on'),
+                  'var(--deep-orange-color)', 'var(--disabled-color)') }}
+                notify_icon: >-
+                  {{ iif (is_state('light.landing_cupboard_bulb', 'on'),
+                  'mdi:lightbulb', 'mdi:lightbulb-off') }}
+                tap_action:
+                  action: toggle
+                hide_button: false
+                button_type: action
+                card_type: default
+                sub_card:
+                  default_card:
+                    - title: Category default expanded
+                      collapsed_items: false
+                      items:
+                        - entity: device_tracker.pixel_9
+                        - entity: media_player.lounge_tv
+                        - entity: light.landing_cupboard_bulb
+                        - entity: light.wardrobe_light
+                        - entity: binary_sensor.nighttime
+                        - entity: binary_sensor.evening
+                    - title: Category collapsed
+                      collapsed_items: true
+                      items:
+                        - entity: device_tracker.pixel_9
+                        - entity: media_player.lounge_tv
+                        - entity: light.landing_cupboard_bulb
+                        - entity: light.wardrobe_light
+                        - entity: binary_sensor.nighttime
+                        - entity: binary_sensor.evening
+                  custom_card:
+                    - type: entities
+                      title: Custom Card
+                      entities:
+                        - entity: device_tracker.pixel_9
+                        - entity: media_player.lounge_tv
+                        - entity: light.landing_cupboard_bulb
+                        - entity: light.wardrobe_light
+                        - entity: binary_sensor.nighttime
+                        - entity: binary_sensor.evening
+              - layout: horizontal
+                transparent: false
+                show_primary: true
+                show_secondary: true
+                show_icon: true
+                name: Wardrobe Light
+                entity: light.wardrobe_light
+                notify: '{{ true }}'
+                notify_color: >-
+                  {{ iif (is_state('light.wardrobe_light', 'on'),
+                  'var(--deep-orange-color)', 'var(--disabled-color)') }}
+                notify_icon: >-
+                  {{ iif (is_state('light.wardrobe_light', 'on'),
+                  'mdi:lightbulb', 'mdi:lightbulb-off') }}
+                tap_action:
+                  action: toggle
+                hide_button: false
+                button_type: action
+                card_type: custom
+                sub_card:
+                  default_card:
+                    - title: Category default expanded
+                      collapsed_items: false
+                      items:
+                        - entity: device_tracker.pixel_9
+                        - entity: media_player.lounge_tv
+                        - entity: light.landing_cupboard_bulb
+                        - entity: light.wardrobe_light
+                        - entity: binary_sensor.nighttime
+                        - entity: binary_sensor.evening
+                    - title: Category collapsed
+                      collapsed_items: true
+                      items:
+                        - entity: device_tracker.pixel_9
+                        - entity: media_player.lounge_tv
+                        - entity: light.landing_cupboard_bulb
+                        - entity: light.wardrobe_light
+                        - entity: binary_sensor.nighttime
+                        - entity: binary_sensor.evening
+                  custom_card:
+                    - type: entities
+                      title: Custom Card
+                      entities:
+                        - entity: device_tracker.pixel_9
+                        - entity: media_player.lounge_tv
+                        - entity: light.landing_cupboard_bulb
+                        - entity: light.wardrobe_light
+                        - entity: binary_sensor.nighttime
+                        - entity: binary_sensor.evening
+              - layout: horizontal
+                transparent: false
+                show_primary: true
+                show_secondary: true
+                show_icon: true
+                name: Nighttime
+                entity: binary_sensor.nighttime
+                hide_button: false
+                button_type: default
+                card_type: default
+                sub_card:
+                  default_card:
+                    - title: Category default expanded
+                      collapsed_items: false
+                      items:
+                        - entity: device_tracker.pixel_9
+                        - entity: media_player.lounge_tv
+                        - entity: light.landing_cupboard_bulb
+                        - entity: light.wardrobe_light
+                        - entity: binary_sensor.nighttime
+                        - entity: binary_sensor.evening
+                    - title: Category collapsed
+                      collapsed_items: true
+                      items:
+                        - entity: device_tracker.pixel_9
+                        - entity: media_player.lounge_tv
+                        - entity: light.landing_cupboard_bulb
+                        - entity: light.wardrobe_light
+                        - entity: binary_sensor.nighttime
+                        - entity: binary_sensor.evening
+                  custom_card:
+                    - type: entities
+                      title: Custom Card
+                      entities:
+                        - entity: device_tracker.pixel_9
+                        - entity: media_player.lounge_tv
+                        - entity: light.landing_cupboard_bulb
+                        - entity: light.wardrobe_light
+                        - entity: binary_sensor.nighttime
+                        - entity: binary_sensor.evening
+              - layout: horizontal
+                transparent: false
+                show_primary: true
+                show_secondary: true
+                show_icon: true
+                name: Evening
+                entity: binary_sensor.evening
+                hide_button: false
+                button_type: default
+                card_type: custom
+                sub_card:
+                  default_card:
+                    - title: Category default expanded
+                      collapsed_items: false
+                      items:
+                        - entity: device_tracker.pixel_9
+                        - entity: media_player.lounge_tv
+                        - entity: light.landing_cupboard_bulb
+                        - entity: light.wardrobe_light
+                        - entity: binary_sensor.nighttime
+                        - entity: binary_sensor.evening
+                    - title: Category collapsed
+                      collapsed_items: true
+                      items:
+                        - entity: device_tracker.pixel_9
+                        - entity: media_player.lounge_tv
+                        - entity: light.landing_cupboard_bulb
+                        - entity: light.wardrobe_light
+                        - entity: binary_sensor.nighttime
+                        - entity: binary_sensor.evening
+                  custom_card:
+                    - type: entities
+                      title: Custom Card
+                      entities:
+                        - entity: device_tracker.pixel_9
+                        - entity: media_player.lounge_tv
+                        - entity: light.landing_cupboard_bulb
+                        - entity: light.wardrobe_light
+                        - entity: binary_sensor.nighttime
+                        - entity: binary_sensor.evening
+              - layout: horizontal
+                transparent: false
+                show_primary: true
+                show_secondary: true
+                show_icon: true
+                color_template: "{% set state = states['sun.sun'].state %}\n\t\tvar(--state-sun-{{ state }}-color)"
+                icon_template: >-
+                  {{ iif (is_state('sun.sun', 'above_horizon'),
+                  'mdi:white-balance-sunny', 'mdi:weather-night') }}
+                icon_type: icon-template
+                icon: mdi:new-box
+                state_template: '{{ "sun.sun" | state_translated }}'
+                include_state_template: true
+                notify: '{{ is_state(''sun.sun'', ''above_horizon'') }}'
+                hide_button: false
+                button_type: default
+                card_type: default
+                primary_info: name
+                state_content:
+                  - state_template
+                entity: button.model_y_play_fart
+                sub_card:
+                  default_card:
+                    - title: Category default expanded
+                      collapsed_items: false
+                      items:
+                        - entity: sun.sun
+                        - entity: sensor.sun_next_dawn
+                        - entity: sensor.sun_next_midnight
+                        - entity: sensor.sun_next_noon
+                    - title: Category collapsed
+                      collapsed_items: true
+                      items:
+                        - entity: sun.sun
+                        - entity: sensor.sun_next_dawn
+                        - entity: sensor.sun_next_midnight
+                        - entity: sensor.sun_next_noon
+                  custom_card:
+                    - type: entities
+                      title: Custom Card
+                      entities:
+                        - entity: sun.sun
+                        - entity: sensor.sun_next_dawn
+                        - entity: sensor.sun_next_midnight
+                        - entity: sensor.sun_next_noon
+              - layout: horizontal
+                transparent: false
+                show_primary: true
+                show_secondary: true
+                show_icon: true
+                name: New Button
+                entity: sun.sun
+                notify: '{{ states[''sun.sun''].state != ''above_horizon'' }}'
+                hide_button: false
+                button_type: default
+                card_type: custom
+                sub_card:
+                  default_card:
+                    - title: Category default expanded
+                      collapsed_items: false
+                      items:
+                        - entity: sun.sun
+                        - entity: sensor.sun_next_dawn
+                        - entity: sensor.sun_next_midnight
+                        - entity: sensor.sun_next_noon
+                    - title: Category collapsed
+                      collapsed_items: true
+                      items:
+                        - entity: sun.sun
+                        - entity: sensor.sun_next_dawn
+                        - entity: sensor.sun_next_midnight
+                        - entity: sensor.sun_next_noon
+                  custom_card:
+                    - type: entities
+                      title: Custom Card
+                      entities:
+                        - entity: sun.sun
+                        - entity: sensor.sun_next_dawn
+                        - entity: sensor.sun_next_midnight
+                        - entity: sensor.sun_next_noon
+    badges:
+      - type: custom:decluttering-card
+        template: nav_chip
+        variables:
+          - navigation_path: /mobile-dashboard/rooms
+          - icon: m3of:arrow-left-alt
+    header:
+      layout: responsive
+      badges_position: top
+      badges_wrap: wrap
+      card:
+        type: vertical-stack
+        cards:
+          - type: custom:decluttering-card
+            template: mushroom_room_title_card
+            variables:
+              - title: 🚗 Driveway
           - type: custom:paper-buttons-row
             styles:
               justify-content: flex-start
